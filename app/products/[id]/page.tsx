@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 
 // Mock product data (replace with API call in production)
 const products = [
@@ -7,16 +8,18 @@ const products = [
   { id: 3, name: 'Product 3', price: 19.99, image: '/product3.jpg', description: 'Description for Product 3' },
 ];
 
-// Define the props type for the dynamic route
+// Define the props type for the dynamic route using Next.js types
+import type { NextPage } from 'next';
+
 type ProductPageProps = {
   params: { id: string };
 };
 
-export default function ProductPage({ params }: ProductPageProps) {
+const ProductPage: NextPage<ProductPageProps> = ({ params }) => {
   const product = products.find((p) => p.id === parseInt(params.id));
 
   if (!product) {
-    return <div className="text-center py-16">Product not found</div>;
+    notFound(); // Use Next.js's notFound() for 404 handling
   }
 
   return (
@@ -38,4 +41,6 @@ export default function ProductPage({ params }: ProductPageProps) {
       </div>
     </div>
   );
-}
+};
+
+export default ProductPage;
