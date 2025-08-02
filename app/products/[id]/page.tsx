@@ -8,15 +8,14 @@ const products = [
   { id: 3, name: 'Product 3', price: 19.99, image: '/product3.jpg', description: 'Description for Product 3' },
 ];
 
-// Define the props type for the dynamic route using Next.js types
-import type { NextPage } from 'next';
+// Define the props type for the dynamic route
+interface ProductPageProps {
+  params: Promise<{ id: string }>; // Use Promise for async params in Next.js 15.4.5
+}
 
-type ProductPageProps = {
-  params: { id: string };
-};
-
-const ProductPage: NextPage<ProductPageProps> = ({ params }) => {
-  const product = products.find((p) => p.id === parseInt(params.id));
+export default async function ProductPage({ params }: ProductPageProps) {
+  const { id } = await params; // Await the params Promise
+  const product = products.find((p) => p.id === parseInt(id));
 
   if (!product) {
     notFound(); // Use Next.js's notFound() for 404 handling
@@ -41,6 +40,4 @@ const ProductPage: NextPage<ProductPageProps> = ({ params }) => {
       </div>
     </div>
   );
-};
-
-export default ProductPage;
+}
