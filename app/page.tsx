@@ -5,7 +5,7 @@ export default function Home() {
     <>
       <main className="flex-grow">
         <div className="min-h-screen bg-gray-100">
-          <section className="text-center py-16">
+          <section className="text-center py-10">
             <h2 className="text-4xl font-bold text-gray-800 mb-8">
               Our Products
             </h2>
