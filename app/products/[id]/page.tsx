@@ -27,9 +27,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
         <Image
           src={product.image}
           alt={product.name}
-          width={400}
-          height={300}
-          className="w-full h-64 object-cover rounded-md"
+          width={220}
+          height={220}
+          className="w-[220px] h-[220px] object-cover rounded-md"
         />
         <h2 className="text-2xl font-bold text-gray-800 mt-4">{product.name}</h2>
         <p className="text-pink-600 text-xl mt-2">${product.price}</p>
