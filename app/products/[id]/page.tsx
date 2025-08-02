@@ -7,7 +7,12 @@ const products = [
   { id: 3, name: 'Product 3', price: 19.99, image: '/product3.jpg', description: 'Description for Product 3' },
 ];
 
-export default function ProductPage({ params }:any) {
+// Define the props type for the dynamic route
+type ProductPageProps = {
+  params: { id: string };
+};
+
+export default function ProductPage({ params }: ProductPageProps) {
   const product = products.find((p) => p.id === parseInt(params.id));
 
   if (!product) {
