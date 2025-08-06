@@ -4,6 +4,7 @@ import { stripe } from '@/stripe/stripe';
 import { NextResponse } from 'next/server';
 
 export async function POST() {
+  console.log('STRIPE_SECRET_KEY:', process.env.STRIPE_SECRET_KEY);
   
   try {
     const session = await stripe.checkout.sessions.create({
