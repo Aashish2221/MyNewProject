@@ -3,7 +3,8 @@
 import { stripe } from '@/stripe/stripe';
 import { NextResponse } from 'next/server';
 
-export async function POST(req: Request) {
+export async function POST() {
+  
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -25,7 +26,10 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ url: session.url, id: session.id });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    if (err && typeof err === 'object' && 'message' in err) {
+      return NextResponse.json({ error: (err as { message: string }).message }, { status: 500 });
+    }
+    return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
   }
 }
