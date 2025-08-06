@@ -7,9 +7,9 @@ const products = [
   { id: 3, name: 'Product 3', price: 19.99, image: '/products/key_holder.webp', description: 'Description for Product 3' },
   { id: 4, name: 'Product 4', price: 19.99, image: '/products/name stand.webp', description: 'Description for Product 3' },
   { id: 5, name: 'Product 5', price: 19.99, image: '/products/name_plate.webp', description: 'Description for Product 3' },
-  { id: 6, name: 'Product 6', price: 19.99, image: '/products/pandent.webp', description: 'Description for Product 3' },
-  { id: 6, name: 'Product 6', price: 19.99, image: '/products/pooja_thali.webp', description: 'Description for Product 3' },
-  { id: 6, name: 'Product 6', price: 19.99, image: '/products/wedding_flower_preserve.webp', description: 'Description for Product 3' },
+  { id: 7, name: 'Product 6', price: 19.99, image: '/products/pandent.webp', description: 'Description for Product 3' },
+  { id: 8, name: 'Product 6', price: 19.99, image: '/products/pooja_thali.webp', description: 'Description for Product 3' },
+  { id: 9, name: 'Product 6', price: 19.99, image: '/products/wedding_flower_preserve.webp', description: 'Description for Product 3' },
 ];
 
 export default function ProductGrid() {

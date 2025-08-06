@@ -60,9 +60,11 @@ export default function CartPage() {
         </div>
         <div className="mt-6 flex justify-between items-center">
           <h3 className="text-xl font-bold text-gray-800">Total: ${total}</h3>
+          <Link href="/checkout" >
           <button className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition">
             Proceed to Checkout
           </button>
+          </Link>
         </div>
       </div>
     </div>
