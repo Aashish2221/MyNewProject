@@ -36,6 +36,9 @@ export default function Navbar() {
               <Link href="/contactUs" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
                 Contact
               </Link>
+              <Link href="/authPage" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700">
+                Login
+              </Link>
             </div>
           </div>
 
@@ -69,6 +72,9 @@ export default function Navbar() {
             </Link>
             <Link href="/contactUs" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">
               Contact
+            </Link>
+             <Link href="/authPage" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700">
+              Login
             </Link>
           </div>
         </div>

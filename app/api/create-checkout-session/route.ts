@@ -1,12 +1,11 @@
-// ✅ Corrected: /app/api/create-checkout-session/route.ts
-
+// /app/api/create-checkout-session/route.ts
+import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/stripe/stripe';
-import { NextResponse } from 'next/server';
 
-export async function POST() {
-  console.log('Creating checkout session...', stripe);
-  
+export async function POST(req: NextRequest) {
   try {
+    const origin = req.headers.get('origin') || 'http://localhost:3000';
+    console.log('Creating checkout session with origin:', origin);
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
@@ -22,15 +21,21 @@ export async function POST() {
           quantity: 1,
         },
       ],
-      success_url: 'http://localhost:3000/checkout?status=success',
-      cancel_url: 'http://localhost:3000/checkout?status=cancel',
+      success_url: `${origin}/checkout?status=success`,
+      cancel_url: `${origin}/checkout?status=cancel`,
     });
 
+    if (!session.url) {
+      throw new Error('Stripe session URL is missing');
+    }
+
+    console.log('Session created:', { id: session.id, url: session.url });
     return NextResponse.json({ url: session.url, id: session.id });
   } catch (err: unknown) {
-    if (err && typeof err === 'object' && 'message' in err) {
-      return NextResponse.json({ error: (err as { message: string }).message }, { status: 500 });
-    }
-    return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
+    console.error('Checkout session error:', err);
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : 'Unknown error' },
+      { status: 500 }
+    );
   }
 }
