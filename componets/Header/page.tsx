@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -11,13 +12,18 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-gray-800 text-white sticky top-0 z-50">
+    <nav className="bg-gray-600 text-white sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="text-2xl font-bold">
-              Logo
+              <Image src="/ChatGPT Image Aug 6, 2025, 09_24_26 PM.png"
+                alt="Logo"
+                width={90}
+                height={90}
+                className='rounded-[70%]'
+              />
             </Link>
           </div>
 
