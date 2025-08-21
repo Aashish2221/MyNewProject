@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
-
+interface RazorpayError extends Error {
+  statusCode?: number;
+  error?: {
+    code?: string;
+    description?: string;
+  };
+}
 export async function POST(request: NextRequest) {
   try {
     // Log environment variables for debugging
@@ -35,16 +41,19 @@ export async function POST(request: NextRequest) {
     const order = await razorpay.orders.create(options);
     console.log('Order created successfully:', order);
     return NextResponse.json({ orderId: order.id, amount: order.amount, currency: order.currency }, { status: 200 });
-  } catch (error: any) {
-    console.error('Error creating order:', {
-      message: error.message,
-      statusCode: error.statusCode,
-      errorCode: error.error?.code,
-      description: error.error?.description,
-    });
-    return NextResponse.json(
-      { error: error.error?.description || 'Failed to create order' },
-      { status: error.statusCode || 500 }
-    );
-  }
+  } catch (error: unknown) {
+  const err = error as RazorpayError;
+
+  console.error('Error creating order:', {
+    message: err.message,
+    statusCode: err.statusCode,
+    errorCode: err.error?.code,
+    description: err.error?.description,
+  });
+
+  return NextResponse.json(
+    { error: err.error?.description || 'Failed to create order' },
+    { status: err.statusCode || 500 }
+  );
+}
 }

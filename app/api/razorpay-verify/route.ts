@@ -20,8 +20,11 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json({ error: 'Invalid signature', success: false }, { status: 400 });
     }
-  } catch (error: any) {
-    console.error('Verification error:', error);
-    return NextResponse.json({ error: 'An error occurred', success: false }, { status: 500 });
-  }
+  } catch (error: unknown) {
+  console.error('Verification error:', error);
+  return NextResponse.json(
+    { error: 'An error occurred', success: false },
+    { status: 500 }
+  );
+}
 }
