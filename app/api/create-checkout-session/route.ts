@@ -1,4 +1,3 @@
-// /app/api/create-checkout-session/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/stripe/stripe';
 
@@ -7,7 +6,7 @@ export async function POST(req: NextRequest) {
     const origin = req.headers.get('origin') || 'http://localhost:3000';
     console.log('Creating checkout session with origin:', origin);
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'upi', 'net_banking'], // Add supported methods
       mode: 'payment',
       line_items: [
         {
@@ -23,6 +22,11 @@ export async function POST(req: NextRequest) {
       ],
       success_url: `${origin}/checkout?status=success`,
       cancel_url: `${origin}/checkout?status=cancel`,
+      payment_method_options: {
+        upi: {
+          expire_after: 300, // UPI link expires after 5 minutes
+        },
+      },
     });
 
     if (!session.url) {
