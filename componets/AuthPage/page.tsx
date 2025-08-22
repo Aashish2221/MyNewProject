@@ -1,9 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { FaUser, FaLock, FaGoogle, FaFacebookF, FaEnvelope } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
 
 interface FormErrors {
   email?: string;
