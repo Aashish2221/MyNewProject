@@ -1,11 +1,17 @@
 'use client';
 
+import { addToCart, selectUser, signIn } from '@/redux/features/authSlice';
+import axios from 'axios';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { FaEnvelope, FaLock } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface FormErrors {
   email?: string;
   password?: string;
-  username?: string;
+  mobileNo?: string;
   name?: string;
   general?: string;
 }
@@ -35,7 +41,7 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('/api/login', formData);
+      const response = await axios.post('https://node-backend-1-yyjm.onrender.com/api/auth/login', formData);
       localStorage.setItem('token', response.data.token);
       alert('Login successful!');
     } catch (error: any) {
@@ -116,22 +122,27 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
 }
 
 function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
-  const [formData, setFormData] = useState({ name: '', username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ name: '', mobile: '', email: '', password: '' });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
     if (!formData.name) newErrors.name = 'Name is required';
-    if (!formData.username) newErrors.username = 'Username is required';
-    else if (formData.username.length < 3) newErrors.username = 'Username must be at least 3 characters';
+    if (!formData.mobile) newErrors.mobileNo = 'MobileNo is required';
+    else if (formData.mobile.length < 3) newErrors.mobileNo = 'MobileNo must be at least 3 characters';
     if (!formData.email) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
     if (!formData.password) newErrors.password = 'Password is required';
     else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
     return newErrors;
   };
-
+//  console.log(user);
+ console.log(user);
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validateForm();
@@ -143,9 +154,21 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('/api/register', formData);
+      const response = await axios.post('https://node-backend-1-yyjm.onrender.com/api/auth/register', formData);
       localStorage.setItem('token', response.data.token);
-      alert('Registration successful!');
+      console.log(response);
+      
+      if(response.status === 200 && response.data.message === 'User already exists'){
+        alert('User already exists, please login');
+        setIsLoading(false);
+        return;
+      }
+      else if(response.status === 200){
+        dispatch(signIn(response.data.user))
+        dispatch(addToCart([]))
+        router.push('/');
+        alert('Registration successful!');
+      }
     } catch (error: any) {
       setErrors({ general: error.response?.data?.message || 'Registration failed' });
     } finally {
@@ -189,17 +212,17 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
         {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
       </div>
       <div>
-        <label htmlFor="username" className="block text-sm font-medium text-gray-700">User Name</label>
+        <label htmlFor="mobileNo" className="block text-sm font-medium text-gray-700">Mobile No</label>
         <input
-          id="username"
+          id="mobileNo"
           type="text"
-          name="username"
-          value={formData.username}
+          name="mobile"
+          value={formData.mobile}
           onChange={handleChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           placeholder="annymomo0o"
         />
-        {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
+        {errors.mobileNo && <p className="text-red-500 text-xs mt-1">{errors.mobileNo}</p>}
       </div>
       <div>
         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
