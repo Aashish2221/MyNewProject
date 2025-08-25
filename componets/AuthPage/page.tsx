@@ -20,6 +20,9 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const user = useSelector(selectUser);
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
@@ -43,7 +46,24 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
     try {
       const response = await axios.post('https://node-backend-1-yyjm.onrender.com/api/auth/login', formData);
       localStorage.setItem('token', response.data.token);
-      alert('Login successful!');
+      if(response.data.massage === "Invalid credentials"){
+        alert('User already exists, please login');
+        setIsLoading(false);
+        return;
+      }
+      else if(response.data.massage == "Login Success Full"){
+        dispatch(
+          signIn({
+            userId: response.data.user.id,
+            userEmail: response.data.user.email,
+            UserName: response.data.user.name,
+            token: response.data.user.token,
+            phoneNumber: response.data.user.mobile,
+          })
+        );
+        router.push('/');
+        alert('Login successful!');
+      }
     } catch (error: any) {
       setErrors({ general: error.response?.data?.message || 'Login failed' });
     } finally {
@@ -141,7 +161,6 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
     return newErrors;
   };
 //  console.log(user);
- console.log(user);
  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,17 +174,23 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
 
     try {
       const response = await axios.post('https://node-backend-1-yyjm.onrender.com/api/auth/register', formData);
-      localStorage.setItem('token', response.data.token);
-      console.log(response);
-      
-      if(response.status === 200 && response.data.message === 'User already exists'){
+      localStorage.setItem('token', response.data.token);  
+          
+      if(response.data.massage === "Invalid credentials"){
         alert('User already exists, please login');
         setIsLoading(false);
         return;
       }
-      else if(response.status === 200){
-        dispatch(signIn(response.data.user))
-        dispatch(addToCart([]))
+      else if(response.data.massage == "User Create Success Full"){
+        dispatch(
+          signIn({
+            userId: response.data.user.id,
+            userEmail: response.data.user.email,
+            UserName: response.data.user.name,
+            token: response.data.user.token,
+            phoneNumber: response.data.user.mobile,
+          })
+        );
         router.push('/');
         alert('Registration successful!');
       }
