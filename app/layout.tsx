@@ -19,11 +19,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
-        <CartProvider>
           <Header />
           {children}
           <Footer />
-        </CartProvider>
         </AuthProvider>
       </body>
     </html>

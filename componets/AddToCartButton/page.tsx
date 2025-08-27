@@ -1,24 +1,27 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import { useCart } from '../CartContext/page';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/features/authSlice';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+  description: string;
+}
 
 interface AddToCartButtonProps {
-  product: {
-    id: number;
-    name: string;
-    price: number;
-    image: string;
-    description: string;
-  };
+  product: Product;
 }
 
 export default function AddToCartButton({ product }: AddToCartButtonProps) {
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const handleAddToCart = () => {
-    addToCart(product);
-    router.push('/cart'); // Navigate to cart page
+    dispatch(addToCart(product));
+    router.push('/cart');
   };
 
   return (

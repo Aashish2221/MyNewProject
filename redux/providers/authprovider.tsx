@@ -1,19 +1,18 @@
-"use client";
-import { Provider } from "react-redux";
-import React from "react";
-import { authStore } from "../store/authStore";
-import { persistStore } from "redux-persist";
-import { usePathname, } from "next/navigation";
-export default function AuthProvider({
-  children,
-}: {
+'use client'; // Mark as Client Component
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor, store } from '../store/authStore';
+
+interface ReduxWrapperProps {
   children: React.ReactNode;
-}) {
-  let persistor = persistStore(authStore);
-  const isHomePage = usePathname() === "/";
+}
+
+export default function ReduxWrapper({ children }: ReduxWrapperProps) {
   return (
-    <Provider store={authStore}>
-      {children}
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        {children}
+      </PersistGate>
     </Provider>
   );
 }

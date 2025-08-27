@@ -59,6 +59,7 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
             UserName: response.data.user.name,
             token: response.data.user.token,
             phoneNumber: response.data.user.mobile,
+            id: response.data.user.id,
           })
         );
         router.push('/');
@@ -189,6 +190,7 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
             UserName: response.data.user.name,
             token: response.data.user.token,
             phoneNumber: response.data.user.mobile,
+            id: response.data.user.id,
           })
         );
         router.push('/');
