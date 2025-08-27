@@ -40,9 +40,20 @@ export default function Checkout() {
 
   // Calculate total amount in paise (Razorpay expects paise)
   const amountInPaise = Math.round(
-    cart.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0) * 100
+    cart.reduce((sum: number, item: CartItem) => {
+      const price = Number(item.price) || 0;
+      const quantity = Number(item.quantity) || 0;
+      return sum + price * quantity;
+    }, 0) * 100
   );
-  
+
+  // Redirect to cart if empty
+  useEffect(() => {
+    if (cart.length === 0) {
+      window.location.href = '/cart';
+    }
+  }, [cart]);
+
   // Mock login function (replace with actual API call)
   const handleLogin = async () => {
     try {
@@ -54,9 +65,10 @@ export default function Checkout() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Login failed');
-      dispatch(signIn(data.user)); // Update Redux state with user data
+      dispatch(signIn(data.user));
     } catch (err: any) {
       setError(err.message || 'Login failed');
+      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }
@@ -79,9 +91,10 @@ export default function Checkout() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Registration failed');
-      dispatch(signIn(data.user)); // Log in after registration
+      dispatch(signIn(data.user));
     } catch (err: any) {
       setError(err.message || 'Registration failed');
+      console.error('Registration error:', err);
     } finally {
       setLoading(false);
     }
@@ -89,13 +102,15 @@ export default function Checkout() {
 
   const createOrderId = async () => {
     try {
+      console.log('Creating order with amount (paise):', amountInPaise);
       const response = await fetch('/api/razorpay-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: amountInPaise/100 }),
+        body: JSON.stringify({ amount: amountInPaise }), // Send amount in paise
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Failed to create order');
+      console.log('Order created:', data);
       return data.orderId;
     } catch (error: any) {
       console.error('Error creating order:', error);
@@ -109,19 +124,38 @@ export default function Checkout() {
       return;
     }
 
+    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
+      setError('Payment gateway configuration is missing');
+      console.error('Missing NEXT_PUBLIC_RAZORPAY_KEY_ID');
+      return;
+    }
+
+    // if (!window.Razorpay) {
+    //   setError('Payment gateway not loaded. Please try again.');
+    //   console.error('Razorpay SDK not available');
+    //   return;
+    // }
+
     setLoading(true);
     setError(null);
 
     try {
+      console.log('Starting payment process...');
+      console.log('Cart:', cart);
+      console.log('Amount in paise:', amountInPaise);
+
       const orderId = await createOrderId();
+      console.log('Order ID:', orderId);
+
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: amountInPaise/100, // Amount in paise
+        amount: amountInPaise, // In paise
         currency: 'INR',
         name: customerInfo?.name || 'Your Company Name',
         description: 'Purchase of Cart Items',
         order_id: orderId,
         handler: async (response: any) => {
+          console.log('Payment response:', response);
           const data = {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
@@ -134,6 +168,7 @@ export default function Checkout() {
             body: JSON.stringify(data),
           });
           const res = await result.json();
+          console.log('Verification result:', res);
 
           if (res.success) {
             window.location.href = '/checkout?status=success';
@@ -157,9 +192,10 @@ export default function Checkout() {
         },
       };
 
-      console.log('Razorpay options:', options); // Debug
+      console.log('Razorpay options:', options);
       const paymentObject = new (window as any).Razorpay(options);
       paymentObject.on('payment.failed', (response: any) => {
+        console.error('Payment failed:', response.error);
         setError('Payment failed: ' + response.error.description);
       });
       paymentObject.open();
@@ -255,7 +291,15 @@ export default function Checkout() {
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
-      <Script id="razorpay-checkout-js" src="https://checkout.razorpay.com/v1/checkout.js" />
+      <Script
+        id="razorpay-checkout-js"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        onLoad={() => console.log('Razorpay script loaded')}
+        onError={() => {
+          console.error('Failed to load Razorpay script');
+          setError('Failed to load payment gateway. Please try again.');
+        }}
+      />
       <h1 className="text-2xl font-bold mb-6">Checkout</h1>
       {error && <div className="text-red-500 mb-4">{error}</div>}
 
@@ -306,7 +350,7 @@ export default function Checkout() {
           {loading ? 'Processing...' : `Pay ₹${(amountInPaise / 100).toFixed(2)}`}
         </button>
         {!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID && (
-          <div className="text-red-500 mt-2">Razorpay Key ID is missing</div>
+          <div className="text-red-500 mt-2">Payment gateway configuration is missing</div>
         )}
         {cart.length === 0 && (
           <div className="text-red-500 mt-2">Your cart is empty</div>
@@ -315,7 +359,3 @@ export default function Checkout() {
     </div>
   );
 }
-
-// function selectIsLoggedIn(state: unknown): unknown {
-//   throw new Error('Function not implemented.');
-// }
