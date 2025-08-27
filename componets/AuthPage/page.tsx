@@ -51,7 +51,7 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
         setIsLoading(false);
         return;
       }
-      else if(response.data.massage == "Login Success Full"){
+      else if(response.data.message == "Login Success Full"){
         dispatch(
           signIn({
             userId: response.data.user.id,
@@ -182,7 +182,7 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
         setIsLoading(false);
         return;
       }
-      else if(response.data.massage == "User Create Success Full"){
+      else if(response.data.message == "User Create Success Full"){
         dispatch(
           signIn({
             userId: response.data.user.id,
