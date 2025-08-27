@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     const options = {
-      amount: amount * 100, // Convert to paise (₹500 = 50000 paise)
+      amount: amount, // Convert to paise (₹500 = 50000 paise)
       currency: 'INR',
       receipt: `receipt#${Date.now()}`,
     };
