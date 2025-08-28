@@ -16,11 +16,18 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
    // Define the customer info interface with specific fields
    interface CustomerInfo {
-     name: string;
-     email: string;
-     mobile: string;
-     address: string;
-   }
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  mobNo?: string;
+  phone?: string;
+  city?: string;
+  pincode?: string;
+  state?: string;
+  address?: string;
+  general?: string;
+}
 
    // Define the auth state
    interface AuthState {
