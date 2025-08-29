@@ -4,21 +4,22 @@ import { useSelector, useDispatch } from 'react-redux';
 import Script from 'next/script';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaEnvelope, FaLock, FaUser, FaPhone, FaMapMarkerAlt, FaCity, FaMapPin } from 'react-icons/fa';
-import { selectCart, selectCustomerInfo, selectIsLoggedIn, signIn } from '@/redux/features/authSlice';
+import { selectCart, selectCustomerInfo, selectIsLoggedIn, selectUser, signIn, updateCustomerInfo } from '@/redux/features/authSlice';
 import axios from 'axios';
 
 // Define types
 interface CustomerInfo {
-  lastName: string;
-  firstName: string;
-  emailId: string;
-  mobNo: string;
-  phone: string;
-  city: string;
-  pincode: string;
-  state: string;
-  profilePhoto: string;
-  address: string;
+  userId: string;
+  lastName?: string;
+  firstName?: string;
+  emailId?: string;
+  mobNo?: string;
+  phone?: string;
+  city?: string;
+  pincode?: string;
+  state?: string;
+  profilePhoto?: string;
+  address?: string;
 }
 
 interface CartItem {
@@ -70,7 +71,10 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('https://node-backend-1-yyjm.onrender.com/api/auth/login', formData);
+      const response = await axios.post('https://node-backend-1-yyjm.onrender.com/api/auth/login', {
+        email: formData.email,
+        password: formData.password,
+      });
       localStorage.setItem('token', response.data.token);
       if (response.data.message === 'Invalid credentials') {
         alert('Invalid credentials');
@@ -78,21 +82,7 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
         return;
       } else if (response.data.message === 'Login Success Full') {
         dispatch(
-          signIn({
-            userId: response.data.user.id,
-            userEmail: response.data.user.email,
-            firstName: response.data.user.firstName,
-            lastName: response.data.user.lastName,
-            token: response.data.user.token,
-            phoneNumber: response.data.user.mobNo,
-            phone: response.data.user.phone,
-            city: response.data.user.city,
-            pincode: response.data.user.pincode,
-            state: response.data.user.state,
-            profilePhoto: response.data.user.profilePhoto,
-            address: response.data.user.address,
-            id: response.data.user.id,
-          })
+          signIn(response.data)
         );
         alert('Login successful!');
       }
@@ -169,7 +159,18 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
 }
 
 function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', password: '', mobNo: '', phone: '', city: '', pincode: '', state: '', address: '' });
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    mobNo: '',
+    phone: '',
+    city: '',
+    pincode: '',
+    state: '',
+    address: '',
+  });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -207,7 +208,7 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
     try {
       const response = await axios.post('https://node-backend-1-yyjm.onrender.com/api/auth/register', {
         ...formData,
-        emailId: formData.email,
+        email: formData.email,
       });
       localStorage.setItem('token', response.data.token);
       if (response.data.message === 'Invalid credentials') {
@@ -216,21 +217,7 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
         return;
       } else if (response.data.message === 'User Create Success Full') {
         dispatch(
-          signIn({
-            userId: response.data.user.id,
-            userEmail: response.data.user.email,
-            firstName: response.data.user.firstName,
-            lastName: response.data.user.lastName,
-            token: response.data.user.token,
-            phoneNumber: response.data.user.mobNo,
-            phone: response.data.user.phone,
-            city: response.data.user.city,
-            pincode: response.data.user.pincode,
-            state: response.data.user.state,
-            profilePhoto: response.data.user.profilePhoto,
-            address: response.data.user.address,
-            id: response.data.user.id,
-          })
+          signIn(response.data)
         );
         alert('Registration successful!');
       }
@@ -454,12 +441,6 @@ function CustomerInfoPopup({ customerInfo, onClose }: { customerInfo: CustomerIn
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
-    if (!formData.firstName) newErrors.firstName = 'First name is required';
-    if (!formData.lastName) newErrors.lastName = 'Last name is required';
-    if (!formData.emailId) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.emailId)) newErrors.email = 'Invalid email format';
-    if (!formData.mobNo) newErrors.mobNo = 'Mobile number is required';
-    else if (formData.mobNo.length < 10) newErrors.mobNo = 'Mobile number must be at least 10 digits';
     if (!formData.phone) newErrors.phone = 'Phone number is required';
     else if (formData.phone.length < 10) newErrors.phone = 'Phone number must be at least 10 digits';
     if (!formData.city) newErrors.city = 'City is required';
@@ -482,26 +463,31 @@ function CustomerInfoPopup({ customerInfo, onClose }: { customerInfo: CustomerIn
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put('https://node-backend-1-yyjm.onrender.com/api/auth/customer-info', formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      dispatch(
-        signIn({
-          userId: response.data.user.id,
-          userEmail: response.data.user.emailId,
-          firstName: response.data.user.firstName,
-          lastName: response.data.user.lastName,
-          token: response.data.user.token || token,
-          phoneNumber: response.data.user.mobNo,
-          phone: response.data.user.phone,
-          city: response.data.user.city,
-          pincode: response.data.user.pincode,
-          state: response.data.user.state,
-          profilePhoto: response.data.user.profilePhoto,
-          address: response.data.user.address,
-          id: response.data.user.id,
-        })
+      const response = await axios.put(
+        'https://node-backend-1-yyjm.onrender.com/api/auth/customer-info',
+        formData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
+
+      // Prepare CustomerInfo payload for Redux
+      const updatedCustomerInfo = {
+        firstName: response.data.user.firstName || formData.firstName,
+        lastName: response.data.user.lastName || formData.lastName,
+        emailId: response.data.user.emailId || formData.emailId,
+        mobNo: response.data.user.mobNo || formData.mobNo,
+        phone: response.data.user.phone || formData.phone,
+        city: response.data.user.city || formData.city,
+        pincode: response.data.user.pincode || formData.pincode,
+        state: response.data.user.state || formData.state,
+        profilePhoto: response.data.user.profilePhoto || formData.profilePhoto,
+        address: response.data.user.address || formData.address,
+      };
+
+      // Dispatch updateCustomerInfo to update Redux state
+      dispatch(updateCustomerInfo(updatedCustomerInfo));
+
       alert('Profile updated successfully!');
       onClose();
     } catch (error: any) {
@@ -528,73 +514,18 @@ function CustomerInfoPopup({ customerInfo, onClose }: { customerInfo: CustomerIn
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Edit Customer Information</h2>
         {errors.general && <p className="text-red-500 text-sm text-center mb-4 animate-pulse">{errors.general}</p>}
 
-        {/* Display and Edit Form */}
+        {/* Customer Personal Info (Hidden) */}
+        <div className="hidden">
+          <input name="firstName" value={formData.firstName} readOnly />
+          <input name="lastName" value={formData.lastName} readOnly />
+          <input name="emailId" value={formData.emailId} readOnly />
+          <input name="mobNo" value={formData.mobNo} readOnly />
+        </div>
+
+        {/* Customer Shipping Info */}
         <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-gray-700 mb-3">Shipping Information</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
-              <div className="mt-1 relative">
-                <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  id="firstName"
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-sm"
-                  placeholder="First Name"
-                />
-              </div>
-              {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
-            </div>
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
-              <div className="mt-1 relative">
-                <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  id="lastName"
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-sm"
-                  placeholder="Last Name"
-                />
-              </div>
-              {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
-            </div>
-            <div>
-              <label htmlFor="emailId" className="block text-sm font-medium text-gray-700">Email Address</label>
-              <div className="mt-1 relative">
-                <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  id="emailId"
-                  type="email"
-                  name="emailId"
-                  value={formData.emailId}
-                  onChange={handleChange}
-                  className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-sm"
-                  placeholder="yourname@gmail.com"
-                />
-              </div>
-              {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-            </div>
-            <div>
-              <label htmlFor="mobNo" className="block text-sm font-medium text-gray-700">Mobile Number</label>
-              <div className="mt-1 relative">
-                <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <input
-                  id="mobNo"
-                  type="tel"
-                  name="mobNo"
-                  value={formData.mobNo}
-                  onChange={handleChange}
-                  className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-sm"
-                  placeholder="1234567890"
-                />
-              </div>
-              {errors.mobNo && <p className="text-red-500 text-xs mt-1">{errors.mobNo}</p>}
-            </div>
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
               <div className="mt-1 relative">
@@ -742,26 +673,38 @@ function PaymentPopup({ customerInfo, cart, amountInPaise, onConfirm, onCancel, 
         {/* Customer Information */}
         <div className="mb-6">
           <h3 className="text-lg font-semibold text-gray-700 mb-3">Customer Information</h3>
-          <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
-            <div>
-              <p className="text-sm text-gray-600"><strong>First Name:</strong> {customerInfo?.firstName || 'Not provided'}</p>
-              <p className="text-sm text-gray-600"><strong>Last Name:</strong> {customerInfo?.lastName || 'Not provided'}</p>
-              <p className="text-sm text-gray-600"><strong>Email:</strong> {customerInfo?.emailId || 'Not provided'}</p>
-              <p className="text-sm text-gray-600"><strong>Mobile:</strong> {customerInfo?.mobNo || 'Not provided'}</p>
-              <p className="text-sm text-gray-600"><strong>Phone:</strong> {customerInfo?.phone || 'Not provided'}</p>
+          <div className="space-y-4">
+            {/* Personal Info */}
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="text-sm font-medium text-gray-600 mb-2">Personal Information</h4>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <p><strong>First Name:</strong> {customerInfo?.firstName || 'Not provided'}</p>
+                <p><strong>Last Name:</strong> {customerInfo?.lastName || 'Not provided'}</p>
+                <p><strong>Email:</strong> {customerInfo?.emailId || 'Not provided'}</p>
+                <p><strong>Mobile:</strong> {customerInfo?.mobNo || 'Not provided'}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-called sm text-gray-600"><strong>City:</strong> {customerInfo?.city || 'Not provided'}</p>
-              <p className="text-sm text-gray-600"><strong>Pincode:</strong> {customerInfo?.pincode || 'Not provided'}</p>
-              <p className="text-sm text-gray-600"><strong>State:</strong> {customerInfo?.state || 'Not provided'}</p>
-              <p className="text-sm text-gray-600"><strong>Address:</strong> {customerInfo?.address || 'Not provided'}</p>
-              {customerInfo?.profilePhoto ? (
-                <img src={customerInfo.profilePhoto} alt="Profile" className="w-16 h-16 rounded-full object-cover mt-2" />
-              ) : (
-                <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center mt-2">
-                  <span className="text-gray-500 text-sm">No Photo</span>
-                </div>
-              )}
+            {/* Shipping Info */}
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="text-sm font-medium text-gray-600 mb-2">Shipping Information</h4>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <p><strong>Phone:</strong> {customerInfo?.phone || 'Not provided'}</p>
+                <p><strong>City:</strong> {customerInfo?.city || 'Not provided'}</p>
+                <p><strong>Pincode:</strong> {customerInfo?.pincode || 'Not provided'}</p>
+                <p><strong>State:</strong> {customerInfo?.state || 'Not provided'}</p>
+                <p className="col-span-2"><strong>Address:</strong> {customerInfo?.address || 'Not provided'}</p>
+                {customerInfo?.profilePhoto ? (
+                  <div className="col-span-2 flex justify-center">
+                    <img src={customerInfo.profilePhoto} alt="Profile" className="w-16 h-16 rounded-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="col-span-2 flex justify-center">
+                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500 text-sm">No Photo</span>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -814,6 +757,7 @@ function PaymentPopup({ customerInfo, cart, amountInPaise, onConfirm, onCancel, 
 export default function Checkout() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const customerInfo = useSelector(selectCustomerInfo) as CustomerInfo;
+  const user = useSelector(selectUser);
   const cart = useSelector(selectCart) || [];
   const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(true);
@@ -831,25 +775,11 @@ export default function Checkout() {
       const fetchCustomerInfo = async () => {
         try {
           const token = localStorage.getItem('token');
-          const response = await axios.get('https://node-backend-1-yyjm.onrender.com/api/auth/customer-info', {
-            headers: { Authorization: `Bearer ${token}` },
+          const response = await axios.get('http://localhost:5000/api/auth/customer-info', {
+            headers: { Authorization: `Bearer ${user?.token}` },
           });
           dispatch(
-            signIn({
-              userId: response.data.user.id,
-              userEmail: response.data.user.emailId,
-              firstName: response.data.user.firstName,
-              lastName: response.data.user.lastName,
-              token: response.data.user.token || token,
-              phoneNumber: response.data.user.mobNo,
-              phone: response.data.user.phone,
-              city: response.data.user.city,
-              pincode: response.data.user.pincode,
-              state: response.data.user.state,
-              profilePhoto: response.data.user.profilePhoto,
-              address: response.data.user.address,
-              id: response.data.user.id,
-            })
+            signIn(response.data)
           );
         } catch (error: any) {
           console.error('Failed to fetch customer info:', error);
@@ -1032,23 +962,37 @@ export default function Checkout() {
               Edit Information
             </button>
           </div>
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <p><strong>First Name:</strong> {customerInfo?.firstName || 'Not provided'}</p>
-            <p><strong>Last Name:</strong> {customerInfo?.lastName || 'Not provided'}</p>
-            <p><strong>Email:</strong> {customerInfo?.emailId || 'Not provided'}</p>
-            <p><strong>Mobile:</strong> {customerInfo?.mobNo || 'Not provided'}</p>
-            <p><strong>Phone:</strong> {customerInfo?.phone || 'Not provided'}</p>
-            <p><strong>City:</strong> {customerInfo?.city || 'Not provided'}</p>
-            <p><strong>Pincode:</strong> {customerInfo?.pincode || 'Not provided'}</p>
-            <p><strong>State:</strong> {customerInfo?.state || 'Not provided'}</p>
-            <p className="col-span-2"><strong>Address:</strong> {customerInfo?.address || 'Not provided'}</p>
-            {customerInfo?.profilePhoto ? (
-              <img src={customerInfo.profilePhoto} alt="Profile" className="w-16 h-16 rounded-full object-cover col-span-2 mx-auto" />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center col-span-2 mx-auto">
-                <span className="text-gray-500 text-sm">No Photo</span>
+          <div className="space-y-4">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="text-sm font-medium text-gray-600 mb-2">Personal Information</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <p><strong>First Name:</strong> {customerInfo?.firstName || 'Not provided'}</p>
+                <p><strong>Last Name:</strong> {customerInfo?.lastName || 'Not provided'}</p>
+                <p><strong>Email:</strong> {customerInfo?.emailId || 'Not provided'}</p>
+                <p><strong>Mobile:</strong> {customerInfo?.mobNo || 'Not provided'}</p>
               </div>
-            )}
+            </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="text-sm font-medium text-gray-600 mb-2">Shipping Information</h3>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <p><strong>Phone:</strong> {customerInfo?.phone || 'Not provided'}</p>
+                <p><strong>City:</strong> {customerInfo?.city || 'Not provided'}</p>
+                <p><strong>Pincode:</strong> {customerInfo?.pincode || 'Not provided'}</p>
+                <p><strong>State:</strong> {customerInfo?.state || 'Not provided'}</p>
+                <p className="col-span-2"><strong>Address:</strong> {customerInfo?.address || 'Not provided'}</p>
+                {customerInfo?.profilePhoto ? (
+                  <div className="col-span-2 flex justify-center">
+                    <img src={customerInfo.profilePhoto} alt="Profile" className="w-16 h-16 rounded-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="col-span-2 flex justify-center">
+                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500 text-sm">No Photo</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
 

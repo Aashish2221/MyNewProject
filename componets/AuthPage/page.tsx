@@ -53,14 +53,7 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
       }
       else if(response.data.message == "Login Success Full"){
         dispatch(
-          signIn({
-            userId: response.data.user.id,
-            userEmail: response.data.user.email,
-            UserName: response.data.user.name,
-            token: response.data.user.token,
-            phoneNumber: response.data.user.mobile,
-            id: response.data.user.id,
-          })
+          signIn(response.data)
         );
         router.push('/');
         alert('Login successful!');
@@ -184,14 +177,7 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
       }
       else if(response.data.message == "User Create Success Full"){
         dispatch(
-          signIn({
-            userId: response.data.user.id,
-            userEmail: response.data.user.email,
-            UserName: response.data.user.name,
-            token: response.data.user.token,
-            phoneNumber: response.data.user.mobile,
-            id: response.data.user.id,
-          })
+          signIn(response.data)
         );
         router.push('/');
         alert('Registration successful!');

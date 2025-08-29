@@ -3,12 +3,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useSelector } from 'react-redux';
-import { selectIsLoggedIn, selectCustomerInfo } from '@/redux/features/authSlice';
+import { selectIsLoggedIn, selectCustomerInfo, selectUser } from '@/redux/features/authSlice';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const customerInfo = useSelector(selectCustomerInfo);
+  const user = useSelector(selectUser)
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -16,10 +16,9 @@ export default function Navbar() {
 
   // Get the first letter of the user's name and capitalize it
   const getUserInitial = () => {
-    console.log(customerInfo);
     
-    if (!customerInfo?.name) return 'U'; // Default to 'U' if no name
-    const firstLetter = customerInfo.name.charAt(0).toUpperCase();
+    if (!user?.name) return 'U'; // Default to 'U' if no name
+    const firstLetter = user.name.charAt(0).toUpperCase();
     return firstLetter;
   };
 
