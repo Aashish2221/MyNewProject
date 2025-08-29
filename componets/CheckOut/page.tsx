@@ -82,7 +82,7 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
         return;
       } else if (response.data.message === 'Login Success Full') {
         dispatch(
-          signIn(response.data)
+          signIn(response.data.user)
         );
         alert('Login successful!');
       }
@@ -217,7 +217,7 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
         return;
       } else if (response.data.message === 'User Create Success Full') {
         dispatch(
-          signIn(response.data)
+          signIn(response.data.user)
         );
         alert('Registration successful!');
       }
@@ -438,6 +438,7 @@ function CustomerInfoPopup({ customerInfo, onClose }: { customerInfo: CustomerIn
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
@@ -462,32 +463,15 @@ function CustomerInfoPopup({ customerInfo, onClose }: { customerInfo: CustomerIn
     setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
       const response = await axios.put(
         'https://node-backend-1-yyjm.onrender.com/api/auth/customer-info',
         formData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${user?.user?.token}` },
         }
       );
-
-      // Prepare CustomerInfo payload for Redux
-      const updatedCustomerInfo = {
-        firstName: response.data.user.firstName || formData.firstName,
-        lastName: response.data.user.lastName || formData.lastName,
-        emailId: response.data.user.emailId || formData.emailId,
-        mobNo: response.data.user.mobNo || formData.mobNo,
-        phone: response.data.user.phone || formData.phone,
-        city: response.data.user.city || formData.city,
-        pincode: response.data.user.pincode || formData.pincode,
-        state: response.data.user.state || formData.state,
-        profilePhoto: response.data.user.profilePhoto || formData.profilePhoto,
-        address: response.data.user.address || formData.address,
-      };
-
       // Dispatch updateCustomerInfo to update Redux state
-      dispatch(updateCustomerInfo(updatedCustomerInfo));
-
+      dispatch(updateCustomerInfo(response.data));
       alert('Profile updated successfully!');
       onClose();
     } catch (error: any) {
@@ -693,17 +677,6 @@ function PaymentPopup({ customerInfo, cart, amountInPaise, onConfirm, onCancel, 
                 <p><strong>Pincode:</strong> {customerInfo?.pincode || 'Not provided'}</p>
                 <p><strong>State:</strong> {customerInfo?.state || 'Not provided'}</p>
                 <p className="col-span-2"><strong>Address:</strong> {customerInfo?.address || 'Not provided'}</p>
-                {customerInfo?.profilePhoto ? (
-                  <div className="col-span-2 flex justify-center">
-                    <img src={customerInfo.profilePhoto} alt="Profile" className="w-16 h-16 rounded-full object-cover" />
-                  </div>
-                ) : (
-                  <div className="col-span-2 flex justify-center">
-                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500 text-sm">No Photo</span>
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           </div>
@@ -774,12 +747,15 @@ export default function Checkout() {
     if (isLoggedIn) {
       const fetchCustomerInfo = async () => {
         try {
-          const token = localStorage.getItem('token');
-          const response = await axios.get('http://localhost:5000/api/auth/customer-info', {
-            headers: { Authorization: `Bearer ${user?.token}` },
+          const response = await axios.get('https://node-backend-1-yyjm.onrender.com/api/auth/customer-info', {
+            headers: { Authorization: `Bearer ${user?.user?.token}` },
           });
+          if (response.data.message === 'Customer info not found'){
+              setShowCustomerInfoPopup(true);
+              return;
+          }
           dispatch(
-            signIn(response.data)
+            updateCustomerInfo(response.data)
           );
         } catch (error: any) {
           console.error('Failed to fetch customer info:', error);
@@ -936,131 +912,157 @@ export default function Checkout() {
     );
   }
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 p-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
-        <Script
-          id="razorpay-checkout-js"
-          src="https://checkout.razorpay.com/v1/checkout.js"
-          onLoad={() => console.log('Razorpay script loaded')}
-          onError={() => {
-            console.error('Failed to load Razorpay script');
-            setError('Failed to load payment gateway. Please try again.');
-          }}
-        />
-        <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">Checkout</h1>
-        {error && <div className="text-red-500 mb-4 text-center text-sm animate-pulse">{error}</div>}
+ return (
+  <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 p-6">
+    <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8">
+      <Script
+        id="razorpay-checkout-js"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        onLoad={() => console.log('Razorpay script loaded')}
+        onError={() => {
+          console.error('Failed to load Razorpay script');
+          setError('Failed to load payment gateway. Please try again.');
+        }}
+      />
+      <h1 className="text-4xl font-serif font-bold text-center text-gray-900 mb-8">Checkout</h1>
 
-        {/* User Information Section */}
-        <div className="bg-white p-4 rounded-lg shadow mb-4">
-          <div className="flex justify-between items-center mb-3">
-            <h2 className="text-lg font-semibold text-gray-700">User Information</h2>
-            <button
-              onClick={() => setShowCustomerInfoPopup(true)}
-              className="text-blue-600 hover:underline text-sm"
-            >
-              Edit Information
-            </button>
-          </div>
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-600 mb-2">Personal Information</h3>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <p><strong>First Name:</strong> {customerInfo?.firstName || 'Not provided'}</p>
-                <p><strong>Last Name:</strong> {customerInfo?.lastName || 'Not provided'}</p>
-                <p><strong>Email:</strong> {customerInfo?.emailId || 'Not provided'}</p>
-                <p><strong>Mobile:</strong> {customerInfo?.mobNo || 'Not provided'}</p>
+      {/* User Information Section */}
+      <div className="bg-white p-6 rounded-xl shadow-sm mb-6 border border-gray-200">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-sans font-semibold text-gray-800">User Information</h2>
+          <button
+            onClick={() => setShowCustomerInfoPopup(true)}
+            className="text-indigo-600 text-sm font-sans font-medium underline"
+          >
+            Edit Information
+          </button>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+          {/* Personal Information (Left) */}
+          <div className="bg-gray-50 p-5 rounded-lg">
+            <h3 className="text-lg font-sans font-medium text-gray-700 mb-3 text-left">Personal Information</h3>
+            <div className="space-y-2 text-sm font-sans text-gray-600">
+              <div className="flex items-center">
+                <span className="w-24 font-medium">Name:</span>
+                <span>{user?.user?.name || 'Not provided'}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-24 font-medium">Email:</span>
+                <span>{user?.user?.email || 'Not provided'}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-24 font-medium">Mobile:</span>
+                <span>{user?.user?.mobile || 'Not provided'}</span>
               </div>
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-sm font-medium text-gray-600 mb-2">Shipping Information</h3>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <p><strong>Phone:</strong> {customerInfo?.phone || 'Not provided'}</p>
-                <p><strong>City:</strong> {customerInfo?.city || 'Not provided'}</p>
-                <p><strong>Pincode:</strong> {customerInfo?.pincode || 'Not provided'}</p>
-                <p><strong>State:</strong> {customerInfo?.state || 'Not provided'}</p>
-                <p className="col-span-2"><strong>Address:</strong> {customerInfo?.address || 'Not provided'}</p>
+          </div>
+          {/* Shipping Information (Right) */}
+          <div className="bg-gray-50 p-5 rounded-lg">
+            <h3 className="text-lg font-sans font-medium text-gray-700 mb-3 text-left">Shipping Information</h3>
+            <div className="space-y-2 text-sm font-sans text-gray-600">
+              <div className="flex items-center">
+                <span className="w-24 font-medium">Phone:</span>
+                <span>{customerInfo?.phone || 'Not provided'}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-24 font-medium">City:</span>
+                <span>{customerInfo?.city || 'Not provided'}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-24 font-medium">Pincode:</span>
+                <span>{customerInfo?.pincode || 'Not provided'}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="w-24 font-medium">State:</span>
+                <span>{customerInfo?.state || 'Not provided'}</span>
+              </div>
+              <div className="flex items-start">
+                <span className="w-24 font-medium">Address:</span>
+                <span>{customerInfo?.address || 'Not provided'}</span>
+              </div>
+              {/* <div className="flex justify-center mt-4">
                 {customerInfo?.profilePhoto ? (
-                  <div className="col-span-2 flex justify-center">
-                    <img src={customerInfo.profilePhoto} alt="Profile" className="w-16 h-16 rounded-full object-cover" />
-                  </div>
+                  <img
+                    src={customerInfo.profilePhoto}
+                    alt="Profile"
+                    className="w-16 h-16 rounded-full object-cover border border-gray-200"
+                  />
                 ) : (
-                  <div className="col-span-2 flex justify-center">
-                    <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500 text-sm">No Photo</span>
-                    </div>
+                  <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center">
+                    <span className="text-gray-500 text-xs font-sans">No Photo</span>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
-
-        {/* Order Summary Section */}
-        <div className="bg-white p-4 rounded-lg shadow mb-4">
-          <h2 className="text-lg font-semibold mb-3 text-gray-700">Order Summary</h2>
-          {cart.length === 0 ? (
-            <p className="text-gray-500">Your cart is empty</p>
-          ) : (
-            <>
-              {cart.map((item: CartItem) => (
-                <div key={item.id} className="flex justify-between mb-1 text-sm">
-                  <span>{item.name} x {item.quantity}</span>
-                  <span>₹{(item.price * item.quantity).toFixed(2)}</span>
-                </div>
-              ))}
-              <hr className="my-2" />
-              <div className="flex justify-between font-semibold text-sm">
-                <span>Total</span>
-                <span>₹{(amountInPaise / 100).toFixed(2)}</span>
-              </div>
-            </>
-          )}
-        </div>
-
-        {/* Payment Section */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold mb-3 text-gray-700">Payment</h2>
-          <button
-            onClick={() => setShowPaymentPopup(true)}
-            disabled={loading || !process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || cart.length === 0}
-            className="w-full bg-gradient-to-r from-indigo-500 to-indigo-700 text-white py-2 px-4 rounded-full hover:from-indigo-600 hover:to-indigo-800 disabled:opacity-50 transition-all duration-300 text-sm"
-          >
-            {loading ? 'Processing...' : `Pay ₹${(amountInPaise / 100).toFixed(2)}`}
-          </button>
-          {!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID && (
-            <div className="text-red-500 mt-2 text-sm">Payment gateway configuration is missing</div>
-          )}
-          {cart.length === 0 && (
-            <div className="text-red-500 mt-2 text-sm">Your cart is empty</div>
-          )}
-        </div>
-
-        {/* Customer Info Popup */}
-        <AnimatePresence>
-          {showCustomerInfoPopup && (
-            <CustomerInfoPopup
-              customerInfo={customerInfo}
-              onClose={() => setShowCustomerInfoPopup(false)}
-            />
-          )}
-        </AnimatePresence>
-
-        {/* Payment Popup */}
-        <AnimatePresence>
-          {showPaymentPopup && (
-            <PaymentPopup
-              customerInfo={customerInfo}
-              cart={cart}
-              amountInPaise={amountInPaise}
-              onConfirm={processPayment}
-              onCancel={() => setShowPaymentPopup(false)}
-              loading={loading}
-              error={error}
-            />
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Order Summary Section */}
+      <div className="bg-gray-50 p-6 rounded-xl shadow-sm mb-6">
+        <h2 className="text-2xl font-sans font-semibold text-gray-800 mb-4 text-left">Order Summary</h2>
+        {(cart?.length ?? 0) === 0 ? (
+          <p className="text-gray-500 text-sm font-sans text-center">Your cart is empty</p>
+        ) : (
+          <>
+            {cart.map((item: CartItem) => (
+              <div key={item.id} className="flex justify-between mb-2 text-sm font-sans text-gray-600">
+                <span>{item.name} x {item.quantity}</span>
+                <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+            ))}
+            <hr className="my-3 border-gray-200" />
+            <div className="flex justify-between text-base font-sans font-semibold text-gray-800">
+              <span>Total</span>
+              <span>₹{(amountInPaise / 100).toFixed(2)}</span>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Payment Section */}
+      <div className="bg-white p-6 rounded-xl shadow-sm">
+        <h2 className="text-2xl font-sans font-semibold text-gray-800 mb-4 text-left">Payment</h2>
+        <button
+          onClick={() => setShowPaymentPopup(true)}
+          disabled={loading || !process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || (cart?.length ?? 0) === 0}
+          className="w-full bg-indigo-600 text-white py-3 px-6 rounded-full text-sm font-sans font-medium disabled:opacity-50"
+        >
+          {loading ? 'Processing...' : `Pay ₹${(amountInPaise / 100).toFixed(2)}`}
+        </button>
+        {!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID && (
+          <div className="text-red-500 mt-3 text-sm font-sans font-medium text-center">Payment gateway configuration is missing</div>
+        )}
+        {(cart?.length ?? 0) === 0 && (
+          <div className="text-red-500 mt-3 text-sm font-sans font-medium text-center">Your cart is empty</div>
+        )}
+      </div>
+
+      {/* Customer Info Popup */}
+      <AnimatePresence>
+        {showCustomerInfoPopup && (
+          <CustomerInfoPopup
+            customerInfo={customerInfo}
+            onClose={() => setShowCustomerInfoPopup(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Payment Popup */}
+      <AnimatePresence>
+        {showPaymentPopup && (
+          <PaymentPopup
+            customerInfo={customerInfo}
+            cart={cart}
+            amountInPaise={amountInPaise}
+            onConfirm={processPayment}
+            onCancel={() => setShowPaymentPopup(false)}
+            loading={loading}
+            error={error}
+          />
+        )}
+      </AnimatePresence>
     </div>
-  );
+  </div>
+);
 }

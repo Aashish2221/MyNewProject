@@ -53,7 +53,7 @@ function LoginForm({ switchToRegister }: { switchToRegister: () => void }) {
       }
       else if(response.data.message == "Login Success Full"){
         dispatch(
-          signIn(response.data)
+          signIn(response.data.user)
         );
         router.push('/');
         alert('Login successful!');
@@ -154,7 +154,6 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
     else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
     return newErrors;
   };
-//  console.log(user);
  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -177,7 +176,7 @@ function RegisterForm({ switchToLogin }: { switchToLogin: () => void }) {
       }
       else if(response.data.message == "User Create Success Full"){
         dispatch(
-          signIn(response.data)
+          signIn(response.data.user)
         );
         router.push('/');
         alert('Registration successful!');

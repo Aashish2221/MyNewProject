@@ -177,7 +177,7 @@ export const {
 } = authSlice.actions;
 
 // Selectors
-export const selectUser = (state: { authState?: AuthState }) => state.authState?.user;
+export const selectUser = (state: { authState?: AuthState }) => state.authState;
 export const selectIsLoggedIn = (state: { authState?: AuthState }) => state.authState?.isLoggedIn;
 export const selectCustomerInfo = (state: { authState?: AuthState }) =>
   state.authState?.customerInfo || {};
