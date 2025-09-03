@@ -130,13 +130,13 @@ export default function CustomerInfoPopup({ customerInfo, onClose }: { customerI
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
           <div>
-            <label htmlFor="emailId" className="block text-sm font-medium text-gray-700">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
             <div className="mt-1 relative">
               <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
-                id="emailId"
+                id="email"
                 type="email"
-                name="emailId"
+                name="email"
                 value={formData.email}
                 onChange={handleChange}
                 className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-sm"

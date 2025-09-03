@@ -144,7 +144,7 @@ function PaymentPopup({ customerInfo, cart, amountInPaise, onConfirm, onCancel, 
 
 export default function Checkout() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const customerInfo = useSelector(selectCustomerInfo) as CustomerInfo;
+  const customerInfo = useSelector(selectCustomerInfo) as CustomerInfo | null;
   const user = useSelector(selectUser);
   const cart = useSelector(selectCart) || [];
   const dispatch = useDispatch();
@@ -159,19 +159,17 @@ export default function Checkout() {
 
   // Fetch customer info on mount
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && user?.user?.token) {
       const fetchCustomerInfo = async () => {
         try {
           const response = await axios.get('https://node-backend-1-yyjm.onrender.com/api/auth/customer-info', {
             headers: { Authorization: `Bearer ${user?.user?.token}` },
           });
-          if (response.data.message === 'Customer info not found'){
-              setShowCustomerInfoPopup(true);
-              return;
+          if (response.data.message === 'Customer info not found') {
+            setShowCustomerInfoPopup(true);
+            return;
           }
-          dispatch(
-            updateCustomerInfo(response.data)
-          );
+          dispatch(updateCustomerInfo(response.data));
         } catch (error: any) {
           console.error('Failed to fetch customer info:', error);
           setError('Failed to load customer information');
@@ -179,7 +177,7 @@ export default function Checkout() {
       };
       fetchCustomerInfo();
     }
-  }, [isLoggedIn, dispatch]);
+  }, [isLoggedIn, dispatch, user?.user?.token]);
 
   // Redirect to cart if empty
   useEffect(() => {
@@ -188,33 +186,9 @@ export default function Checkout() {
     }
   }, [cart]);
 
-  const createOrderId = async () => {
-    try {
-      console.log('Creating order with amount (paise):', amountInPaise);
-      const response = await fetch('/api/razorpay-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: amountInPaise }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Failed to create order');
-      console.log('Order created:', data);
-      return data.orderId;
-    } catch (error: any) {
-      console.error('Error creating order:', error);
-      throw error;
-    }
-  };
-
-  const processPayment = async () => {
-    if (!isLoggedIn) {
-      setError('Please log in or register to proceed with payment');
-      return;
-    }
-
-    if (!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID) {
-      setError('Payment gateway configuration is missing');
-      console.error('Missing NEXT_PUBLIC_RAZORPAY_KEY_ID');
+  const placeOrder = async () => {
+    if (!isLoggedIn || !user?.user?.token || !customerInfo) {
+      setError('Please log in and provide customer information to proceed');
       return;
     }
 
@@ -222,56 +196,89 @@ export default function Checkout() {
     setError(null);
 
     try {
-      console.log('Starting payment process...');
-      console.log('Cart:', cart);
-      console.log('Amount in paise:', amountInPaise);
+      const items = cart.map((item: CartItem) => ({
+        productId: item.id, // Adjust based on your product ID field
+        quantity: item.quantity,
+        price: item.price,
+      }));
+      const shippingInfo = {
+        address: customerInfo.address || '',
+        city: customerInfo.city || '',
+        state: customerInfo.state || '',
+        pincode: customerInfo.pincode || '',
+        phone: customerInfo.phone || '',
+      };
+      const totalAmount = cart.reduce((sum: number, item: CartItem) => sum + (item.price * item.quantity), 0);
 
-      const orderId = await createOrderId();
-      console.log('Order ID:', orderId);
+      const response = await fetch('http://localhost:5000/api/orders/place', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${user.user.token}`,
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({ items, shippingInfo, totalAmount }),
+});
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message || 'Failed to place order');
+      return data.razorpayOrder;
+    } catch (error: any) {
+      console.error('Error placing order:', error);
+      setError(error.message || 'Failed to place order');
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const processPayment = async () => {
+    if (!isLoggedIn || !customerInfo) {
+      setError('Please log in and provide customer information to proceed');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const razorpayOrder = await placeOrder();
+      if (!razorpayOrder) return;
 
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: amountInPaise,
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
+        amount: razorpayOrder.amount,
         currency: 'INR',
-        name: `${customerInfo?.firstName || ''} ${customerInfo?.lastName || 'Customer'}`,
+        name: `${customerInfo.firstName || ''} ${customerInfo.lastName || 'Customer'}`,
         description: 'Purchase of Cart Items',
-        order_id: orderId,
+        order_id: razorpayOrder.id,
         handler: async (response: any) => {
           console.log('Payment response:', response);
-          const data = {
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_signature: response.razorpay_signature,
-          };
-
-          const result = await fetch('/api/razorpay-verify', {
+          const verifyRes = await fetch('http://localhost/api/orders/verify', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            body: JSON.stringify({
+              orderId: response.order_id, // Adjust based on your order ID field
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
           });
-          const res = await result.json();
-          console.log('Verification result:', res);
+          const verifyData = await verifyRes.json();
+          console.log('Verification result:', verifyData);
 
-          if (res.success) {
+          if (verifyData.success) {
             window.location.href = '/checkout?status=success';
           } else {
-            setError('Payment verification failed: ' + res.error);
+            setError('Payment verification failed: ' + verifyData.message);
           }
         },
         prefill: {
-          name: `${customerInfo?.firstName || ''} ${customerInfo?.lastName || 'Customer'}`,
-          email: customerInfo?.emailId || 'customer@example.com',
-          contact: customerInfo?.mobNo || undefined,
+          name: `${customerInfo.firstName || ''} ${customerInfo.lastName || 'Customer'}`,
+          email: customerInfo.emailId || user?.user?.email || 'customer@example.com',
+          contact: customerInfo.phone || user?.user?.mobile || '',
         },
-        theme: {
-          color: '#3399cc',
-        },
-        payment_method: {
-          upi: true,
-          netbanking: true,
-          card: true,
-          wallet: true,
-        },
+        theme: { color: '#3399cc' },
+        payment_method: { upi: true, netbanking: true, card: true, wallet: true },
       };
 
       console.log('Razorpay options:', options);
@@ -290,29 +297,21 @@ export default function Checkout() {
     }
   };
 
-  // Calculate total amount in paise (Razorpay expects paise)
   const amountInPaise = Math.round(
-    cart.reduce((sum: number, item: CartItem) => {
-      const price = Number(item.price) || 0;
-      const quantity = Number(item.quantity) || 0;
-      return sum + price * quantity;
-    }, 0) * 100
+    cart.reduce((sum: number, item: CartItem) => sum + (item.price * item.quantity), 0) * 100
   );
 
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 p-4 sm:p-6 lg:p-8 relative overflow-hidden">
         <div className="w-full max-w-4xl bg-white/90 rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
-          {/* Left Section - Promotional Content */}
-          <div className="w-full md:w-1/2 p-6 bg-cover bg-center relative" style={{ backgroundImage: 'url(https://via.placeholder.com/600x800)' }}>
+          <div className="w-full md:w-1/2 p-6 bg-cover bg-center relative" style={{ backgroundImage: 'ur[](https://via.placeholder.com/600x800)' }}>
             <div className="absolute inset-0 bg-black/20"></div>
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white">
               <h2 className="text-4xl font-bold mb-4">Checkout</h2>
               <p className="text-lg">Complete your purchase securely</p>
             </div>
           </div>
-
-          {/* Right Section - Form */}
           <div className="w-full md:w-1/2 p-6 flex flex-col items-center justify-center">
             <AnimatePresence mode="wait">
               {isLogin ? (
@@ -327,144 +326,114 @@ export default function Checkout() {
     );
   }
 
- return (
-  <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 p-6">
-    <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8">
-      <Script
-        id="razorpay-checkout-js"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        onLoad={() => console.log('Razorpay script loaded')}
-        onError={() => {
-          console.error('Failed to load Razorpay script');
-          setError('Failed to load payment gateway. Please try again.');
-        }}
-      />
-      <h1 className="text-4xl font-serif font-bold text-center text-gray-900 mb-8">Checkout</h1>
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 p-6">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8">
+        <Script
+          id="razorpay-checkout-js"
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          onLoad={() => console.log('Razorpay script loaded')}
+          onError={() => {
+            console.error('Failed to load Razorpay script');
+            setError('Failed to load payment gateway. Please try again.');
+          }}
+        />
+        <h1 className="text-4xl font-serif font-bold text-center text-gray-900 mb-8">Checkout</h1>
 
-      {/* User Information Section */}
-      <div className="bg-white p-6 rounded-xl shadow-sm mb-6 border border-gray-200">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-sans font-semibold text-gray-800">User Information</h2>
+        <div className="bg-white p-6 rounded-xl shadow-sm mb-6 border border-gray-200">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-sans font-semibold text-gray-800">User Information</h2>
+            <button
+              onClick={() => setShowCustomerInfoPopup(true)}
+              className="text-indigo-600 text-sm font-sans font-medium underline"
+            >
+              Edit Information
+            </button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+            <div className="bg-gray-50 p-5 rounded-lg">
+              <h3 className="text-lg font-sans font-medium text-gray-700 mb-3 text-left">Personal Information</h3>
+              <div className="space-y-2 text-sm font-sans text-gray-600">
+                <div className="flex items-center"><span className="w-24 font-medium">Name:</span><span>{user?.user?.name || 'Not provided'}</span></div>
+                <div className="flex items-center"><span className="w-24 font-medium">Email:</span><span>{user?.user?.email || 'Not provided'}</span></div>
+                <div className="flex items-center"><span className="w-24 font-medium">Mobile:</span><span>{user?.user?.mobile || 'Not provided'}</span></div>
+              </div>
+            </div>
+            <div className="bg-gray-50 p-5 rounded-lg">
+              <h3 className="text-lg font-sans font-medium text-gray-700 mb-3 text-left">Shipping Information</h3>
+              <div className="space-y-2 text-sm font-sans text-gray-600">
+                <div className="flex items-center"><span className="w-24 font-medium">Phone:</span><span>{customerInfo?.phone || 'Not provided'}</span></div>
+                <div className="flex items-center"><span className="w-24 font-medium">City:</span><span>{customerInfo?.city || 'Not provided'}</span></div>
+                <div className="flex items-center"><span className="w-24 font-medium">Pincode:</span><span>{customerInfo?.pincode || 'Not provided'}</span></div>
+                <div className="flex items-center"><span className="w-24 font-medium">State:</span><span>{customerInfo?.state || 'Not provided'}</span></div>
+                <div className="flex items-start"><span className="w-24 font-medium">Address:</span><span>{customerInfo?.address || 'Not provided'}</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 p-6 rounded-xl shadow-sm mb-6">
+          <h2 className="text-2xl font-sans font-semibold text-gray-800 mb-4 text-left">Order Summary</h2>
+          {(cart?.length ?? 0) === 0 ? (
+            <p className="text-gray-500 text-sm font-sans text-center">Your cart is empty</p>
+          ) : (
+            <>
+              {cart.map((item: CartItem) => (
+                <div key={item.id} className="flex justify-between mb-2 text-sm font-sans text-gray-600">
+                  <span>{item.name} x {item.quantity}</span>
+                  <span>₹{(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
+              <hr className="my-3 border-gray-200" />
+              <div className="flex justify-between text-base font-sans font-semibold text-gray-800">
+                <span>Total</span>
+                <span>₹{(amountInPaise / 100).toFixed(2)}</span>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h2 className="text-2xl font-sans font-semibold text-gray-800 mb-4 text-left">Payment</h2>
           <button
-            onClick={() => setShowCustomerInfoPopup(true)}
-            className="text-indigo-600 text-sm font-sans font-medium underline"
+            onClick={() => setShowPaymentPopup(true)}
+            disabled={!customerInfo?.address || loading || (cart?.length ?? 0) === 0}
+            className="w-full bg-indigo-600 text-white py-3 px-6 rounded-full text-sm font-sans font-medium disabled:opacity-50"
           >
-            Edit Information
+            {loading ? 'Processing...' : `Pay ₹${(amountInPaise / 100).toFixed(2)}`}
           </button>
+          {error && <div className="text-red-500 mt-3 text-sm font-sans font-medium text-center">{error}</div>}
+          {!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID && (
+            <div className="text-red-500 mt-3 text-sm font-sans font-medium text-center">Payment gateway configuration is missing</div>
+          )}
+          {(cart?.length ?? 0) === 0 && (
+            <div className="text-red-500 mt-3 text-sm font-sans font-medium text-center">Your cart is empty</div>
+          )}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-          {/* Personal Information (Left) */}
-          <div className="bg-gray-50 p-5 rounded-lg">
-            <h3 className="text-lg font-sans font-medium text-gray-700 mb-3 text-left">Personal Information</h3>
-            <div className="space-y-2 text-sm font-sans text-gray-600">
-              <div className="flex items-center">
-                <span className="w-24 font-medium">Name:</span>
-                <span>{user?.user?.name || 'Not provided'}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="w-24 font-medium">Email:</span>
-                <span>{user?.user?.email || 'Not provided'}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="w-24 font-medium">Mobile:</span>
-                <span>{user?.user?.mobile || 'Not provided'}</span>
-              </div>
-            </div>
-          </div>
-          {/* Shipping Information (Right) */}
-          <div className="bg-gray-50 p-5 rounded-lg">
-            <h3 className="text-lg font-sans font-medium text-gray-700 mb-3 text-left">Shipping Information</h3>
-            <div className="space-y-2 text-sm font-sans text-gray-600">
-              <div className="flex items-center">
-                <span className="w-24 font-medium">Phone:</span>
-                <span>{customerInfo?.phone || 'Not provided'}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="w-24 font-medium">City:</span>
-                <span>{customerInfo?.city || 'Not provided'}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="w-24 font-medium">Pincode:</span>
-                <span>{customerInfo?.pincode || 'Not provided'}</span>
-              </div>
-              <div className="flex items-center">
-                <span className="w-24 font-medium">State:</span>
-                <span>{customerInfo?.state || 'Not provided'}</span>
-              </div>
-              <div className="flex items-start">
-                <span className="w-24 font-medium">Address:</span>
-                <span>{customerInfo?.address || 'Not provided'}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+
+        <AnimatePresence>
+          {showCustomerInfoPopup && (
+            <CustomerInfoPopup
+              customerInfo={customerInfo!}
+              onClose={() => setShowCustomerInfoPopup(false)}
+            />
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {showPaymentPopup && (
+            <PaymentPopup
+              customerInfo={customerInfo!}
+              cart={cart}
+              amountInPaise={amountInPaise}
+              onConfirm={processPayment}
+              onCancel={() => setShowPaymentPopup(false)}
+              loading={loading}
+              error={error}
+            />
+          )}
+        </AnimatePresence>
       </div>
-
-      {/* Order Summary Section */}
-      <div className="bg-gray-50 p-6 rounded-xl shadow-sm mb-6">
-        <h2 className="text-2xl font-sans font-semibold text-gray-800 mb-4 text-left">Order Summary</h2>
-        {(cart?.length ?? 0) === 0 ? (
-          <p className="text-gray-500 text-sm font-sans text-center">Your cart is empty</p>
-        ) : (
-          <>
-            {cart.map((item: CartItem) => (
-              <div key={item.id} className="flex justify-between mb-2 text-sm font-sans text-gray-600">
-                <span>{item.name} x {item.quantity}</span>
-                <span>₹{(item.price * item.quantity).toFixed(2)}</span>
-              </div>
-            ))}
-            <hr className="my-3 border-gray-200" />
-            <div className="flex justify-between text-base font-sans font-semibold text-gray-800">
-              <span>Total</span>
-              <span>₹{(amountInPaise / 100).toFixed(2)}</span>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Payment Section */}
-      <div className="bg-white p-6 rounded-xl shadow-sm">
-        <h2 className="text-2xl font-sans font-semibold text-gray-800 mb-4 text-left">Payment</h2>
-        <button
-          onClick={() => setShowPaymentPopup(true)}
-          disabled={customerInfo.address ? false : true }
-          className="w-full bg-indigo-600 text-white py-3 px-6 rounded-full text-sm font-sans font-medium disabled:opacity-50"
-        >
-          {loading ? 'Processing...' : `Pay ₹${(amountInPaise / 100).toFixed(2)}`}
-        </button>
-        {!process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID && (
-          <div className="text-red-500 mt-3 text-sm font-sans font-medium text-center">Payment gateway configuration is missing</div>
-        )}
-        {(cart?.length ?? 0) === 0 && (
-          <div className="text-red-500 mt-3 text-sm font-sans font-medium text-center">Your cart is empty</div>
-        )}
-      </div>
-
-      {/* Customer Info Popup */}
-      <AnimatePresence>
-        {showCustomerInfoPopup && (
-          <CustomerInfoPopup
-            customerInfo={customerInfo}
-            onClose={() => setShowCustomerInfoPopup(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Payment Popup */}
-      <AnimatePresence>
-        {showPaymentPopup && (
-          <PaymentPopup
-            customerInfo={customerInfo}
-            cart={cart}
-            amountInPaise={amountInPaise}
-            onConfirm={processPayment}
-            onCancel={() => setShowPaymentPopup(false)}
-            loading={loading}
-            error={error}
-          />
-        )}
-      </AnimatePresence>
     </div>
-  </div>
-);
+  );
 }
