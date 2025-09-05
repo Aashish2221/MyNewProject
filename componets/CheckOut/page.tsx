@@ -186,116 +186,142 @@ export default function Checkout() {
     }
   }, [cart]);
 
-  const placeOrder = async () => {
-    if (!isLoggedIn || !user?.user?.token || !customerInfo) {
-      setError('Please log in and provide customer information to proceed');
-      return;
-    }
+const placeOrder = async () => {
+  if (!isLoggedIn || !user?.user?.token || !customerInfo) {
+    setError('Please log in and provide customer information to proceed');
+    return;
+  }
+  if (!user.user.mobile || !/^\d{10}$/.test(user.user.mobile || '')) {
+    setError('Please provide a valid 10-digit phone number');
+    return;
+  }
 
-    setLoading(true);
-    setError(null);
+  setLoading(true);
+  setError(null);
 
-    try {
-      const items = cart.map((item: CartItem) => ({
-        productId: item.id, // Adjust based on your product ID field
+  try {
+    const items = cart.map((item: CartItem) => {
+      // Validate item.id as a positive integer
+      if (!Number.isInteger(item.id) || item.id <= 0) {
+        throw new Error(`Invalid product ID for item ${item.id}`);
+      }
+      if (typeof item.price !== 'number' || isNaN(item.price) || item.price <= 0) {
+        throw new Error(`Invalid price for item ${item.id}`);
+      }
+      if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+        throw new Error(`Invalid quantity for item ${item.id}`);
+      }
+      return {
+        productId: item.id, // Numeric ID
         quantity: item.quantity,
         price: item.price,
-      }));
-      const shippingInfo = {
-        address: customerInfo.address || '',
-        city: customerInfo.city || '',
-        state: customerInfo.state || '',
-        pincode: customerInfo.pincode || '',
-        phone: customerInfo.phone || '',
       };
-      const totalAmount = cart.reduce((sum: number, item: CartItem) => sum + (item.price * item.quantity), 0);
+    });
 
-      const response = await fetch('http://localhost:5000/api/orders/place', {
-  method: 'POST',
-  headers: {
-    'Authorization': `Bearer ${user.user.token}`,
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({ items, shippingInfo, totalAmount }),
-});
-      const data = await response.json();
+    const shippingInfo = {
+      address: customerInfo.address || '',
+      city: customerInfo.city || '',
+      state: customerInfo.state || '',
+      pincode: customerInfo.pincode || '',
+      phone: customerInfo.phone || '',
+    };
 
-      if (!response.ok) throw new Error(data.message || 'Failed to place order');
-      return data.razorpayOrder;
-    } catch (error: any) {
-      console.error('Error placing order:', error);
-      setError(error.message || 'Failed to place order');
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
+    const totalAmount = cart.reduce((sum: number, item: CartItem) => {
+      return sum + item.price * item.quantity;
+    }, 0);
+    const sanitizedTotalAmount = parseFloat(totalAmount.toFixed(2));
 
-  const processPayment = async () => {
-    if (!isLoggedIn || !customerInfo) {
-      setError('Please log in and provide customer information to proceed');
-      return;
+    if (isNaN(sanitizedTotalAmount) || sanitizedTotalAmount <= 0) {
+      throw new Error('Invalid total amount');
     }
 
-    setLoading(true);
-    setError(null);
+    const response = await fetch('http://localhost:5000/api/auth/orders/place', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${user.user.token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ items, shippingInfo, totalAmount: sanitizedTotalAmount }),
+    });
 
-    try {
-      const razorpayOrder = await placeOrder();
-      if (!razorpayOrder) return;
+    const data = await response.json();
 
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
-        amount: razorpayOrder.amount,
-        currency: 'INR',
+    if (!response.ok) throw new Error(data.message || 'Failed to place order');
+    return { razorpayOrder: data.razorpayOrder, orderId: data.orderId };
+  } catch (error: any) {
+    console.error('Error placing order:', error);
+    setError(error.message || 'Failed to place order');
+    return null;
+  } finally {
+    setLoading(false);
+  }
+};
+const processPayment = async () => {
+  if (!isLoggedIn || !customerInfo) {
+    setError('Please log in and provide customer information to proceed');
+    return;
+  }
+
+  setLoading(true);
+  setError(null);
+
+  try {
+    const result = await placeOrder();
+    if (!result) return;
+    const { razorpayOrder, orderId } = result;
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
+      amount: razorpayOrder.amount,
+      currency: 'INR',
+      name: `${customerInfo.firstName || ''} ${customerInfo.lastName || 'Customer'}`,
+      description: 'Purchase of Cart Items',
+      order_id: razorpayOrder.id,
+      handler: async (response: any) => {
+        console.log('Payment response:', response);
+        const verifyRes = await fetch('http://localhost:5000/api/auth/orders/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId, // Use the stored orderId
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+          }),
+        });
+        const verifyData = await verifyRes.json();
+        console.log('Verification result:', verifyData);
+
+        if (verifyData.success) {
+          window.location.href = '/checkout?status=success';
+        } else {
+          setError('Payment verification failed: ' + verifyData.message);
+        }
+      },
+      prefill: {
         name: `${customerInfo.firstName || ''} ${customerInfo.lastName || 'Customer'}`,
-        description: 'Purchase of Cart Items',
-        order_id: razorpayOrder.id,
-        handler: async (response: any) => {
-          console.log('Payment response:', response);
-          const verifyRes = await fetch('http://localhost/api/orders/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              orderId: response.order_id, // Adjust based on your order ID field
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-            }),
-          });
-          const verifyData = await verifyRes.json();
-          console.log('Verification result:', verifyData);
+        email: customerInfo.emailId || user?.user?.email || 'customer@example.com',
+        contact: customerInfo.phone || user?.user?.mobile || '',
+      },
+      theme: { color: '#3399cc' },
+      payment_method: { upi: true, netbanking: true, card: true, wallet: true },
+    };
 
-          if (verifyData.success) {
-            window.location.href = '/checkout?status=success';
-          } else {
-            setError('Payment verification failed: ' + verifyData.message);
-          }
-        },
-        prefill: {
-          name: `${customerInfo.firstName || ''} ${customerInfo.lastName || 'Customer'}`,
-          email: customerInfo.emailId || user?.user?.email || 'customer@example.com',
-          contact: customerInfo.phone || user?.user?.mobile || '',
-        },
-        theme: { color: '#3399cc' },
-        payment_method: { upi: true, netbanking: true, card: true, wallet: true },
-      };
-
-      console.log('Razorpay options:', options);
-      const paymentObject = new (window as any).Razorpay(options);
-      paymentObject.on('payment.failed', (response: any) => {
-        console.error('Payment failed:', response.error);
-        setError('Payment failed: ' + response.error.description);
-      });
-      paymentObject.open();
-    } catch (error: any) {
-      console.error('Payment error:', error);
-      setError(error.message || 'An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
-      setShowPaymentPopup(false);
-    }
-  };
+    console.log('Razorpay options:', options);
+    const paymentObject = new (window as any).Razorpay(options);
+    paymentObject.on('payment.failed', (response: any) => {
+      console.error('Payment failed:', response.error);
+      setError('Payment failed: ' + response.error.description);
+    });
+    paymentObject.open();
+  } catch (error: any) {
+    console.error('Payment error:', error);
+    setError(error.message || 'An error occurred. Please try again.');
+  } finally {
+    setLoading(false);
+    setShowPaymentPopup(false);
+  }
+};
 
   const amountInPaise = Math.round(
     cart.reduce((sum: number, item: CartItem) => sum + (item.price * item.quantity), 0) * 100
