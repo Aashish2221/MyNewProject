@@ -35,7 +35,7 @@ interface FormErrors {
 export default function CustomerInfoPopup({ customerInfo, onClose }: { customerInfo: CustomerInfo; onClose: () => void }) {
   const [formData, setFormData] = useState({
     name: `${customerInfo?.name || ''}`,
-    email: customerInfo?.emailId || '',
+    emailId: customerInfo?.emailId || '',
     mobNo: customerInfo?.mobNo || '',
     phone: customerInfo?.phone || '',
     city: customerInfo?.city || '',
@@ -44,6 +44,8 @@ export default function CustomerInfoPopup({ customerInfo, onClose }: { customerI
     profilePhoto: customerInfo?.profilePhoto || '',
     address: customerInfo?.address || '',
   });
+  console.log(formData);
+  
   const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -52,8 +54,8 @@ export default function CustomerInfoPopup({ customerInfo, onClose }: { customerI
   const validateForm = () => {
     const newErrors: FormErrors = {};
     if (!formData.name) newErrors.name = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
+    if (!formData.emailId) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.emailId)) newErrors.email = 'Invalid email format';
     if (!formData.mobNo) newErrors.mobNo = 'Mobile number is required';
     else if (formData.mobNo.length < 10) newErrors.mobNo = 'Mobile number must be at least 10 digits';
     if (!formData.phone) newErrors.phone = 'Phone number is required';
@@ -130,14 +132,14 @@ export default function CustomerInfoPopup({ customerInfo, onClose }: { customerI
             {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <label htmlFor="emailId" className="block text-sm font-medium text-gray-700">Email</label>
             <div className="mt-1 relative">
               <FaUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
-                id="email"
-                type="email"
-                name="email"
-                value={formData.email}
+                id="emailId"
+                type="emailId"
+                name="emailId"
+                value={formData.emailId}
                 onChange={handleChange}
                 className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-sm"
                 placeholder="yourname@example.com"

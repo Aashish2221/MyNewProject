@@ -256,72 +256,79 @@ const placeOrder = async () => {
     setLoading(false);
   }
 };
-const processPayment = async () => {
-  if (!isLoggedIn || !customerInfo) {
-    setError('Please log in and provide customer information to proceed');
-    return;
-  }
+  const processPayment = async () => {
+    if (!isLoggedIn || !customerInfo) {
+      setError('Please log in and provide customer information to proceed');
+      return;
+    }
 
-  setLoading(true);
-  setError(null);
+    setLoading(true);
+    setError(null);
 
-  try {
-    const result = await placeOrder();
-    if (!result) return;
-    const { razorpayOrder, orderId } = result;
+    try {
+      const result = await placeOrder();
+      if (!result) return;
+      const { razorpayOrder, orderId } = result;
 
-    const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
-      amount: razorpayOrder.amount,
-      currency: 'INR',
-      name: `${customerInfo.firstName || ''} ${customerInfo.lastName || 'Customer'}`,
-      description: 'Purchase of Cart Items',
-      order_id: razorpayOrder.id,
-      handler: async (response: any) => {
-        console.log('Payment response:', response);
-        const verifyRes = await fetch('http://localhost:5000/api/auth/orders/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId, // Use the stored orderId
-            razorpay_payment_id: response.razorpay_payment_id,
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_signature: response.razorpay_signature,
-          }),
-        });
-        const verifyData = await verifyRes.json();
-        console.log('Verification result:', verifyData);
-
-        if (verifyData.success) {
-          window.location.href = '/checkout?status=success';
-        } else {
-          setError('Payment verification failed: ' + verifyData.message);
-        }
-      },
-      prefill: {
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
+        amount: razorpayOrder.amount,
+        currency: 'INR',
         name: `${customerInfo.firstName || ''} ${customerInfo.lastName || 'Customer'}`,
-        email: customerInfo.emailId || user?.user?.email || 'customer@example.com',
-        contact: customerInfo.phone || user?.user?.mobile || '',
-      },
-      theme: { color: '#3399cc' },
-      payment_method: { upi: true, netbanking: true, card: true, wallet: true },
-    };
+        description: 'Purchase of Cart Items',
+        order_id: razorpayOrder.id,
+        handler: async (response: any) => {
+          console.log('Payment response:', response);
+          if (!response.razorpay_payment_id || !response.razorpay_order_id || !response.razorpay_signature) {
+            setError('Incomplete payment response from Razorpay');
+            return;
+          }
+          const verifyRes = await fetch('http://localhost:5000/api/auth/orders/verify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${user?.user?.token}`, // Added token
+            },
+            body: JSON.stringify({
+              orderId,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+            }),
+          });
+          const verifyData = await verifyRes.json();
+          console.log('Verification result:', verifyData);
 
-    console.log('Razorpay options:', options);
-    const paymentObject = new (window as any).Razorpay(options);
-    paymentObject.on('payment.failed', (response: any) => {
-      console.error('Payment failed:', response.error);
-      setError('Payment failed: ' + response.error.description);
-    });
-    paymentObject.open();
-  } catch (error: any) {
-    console.error('Payment error:', error);
-    setError(error.message || 'An error occurred. Please try again.');
-  } finally {
-    setLoading(false);
-    setShowPaymentPopup(false);
-  }
-};
+          if (verifyData.success) {
+            window.location.href = '/checkout?status=success';
+          } else {
+            setError('Payment verification failed: ' + verifyData.message);
+          }
+        },
+        prefill: {
+          name: `${customerInfo.firstName || ''} ${customerInfo.lastName || 'Customer'}`,
+          email: customerInfo.emailId || user?.user?.email || 'customer@example.com',
+          contact: customerInfo.phone || user?.user?.mobile || '',
+        },
+        theme: { color: '#3399cc' },
+        payment_method: { upi: true, netbanking: true, card: true, wallet: true },
+      };
+
+      console.log('Razorpay options:', options);
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.on('payment.failed', (response: any) => {
+        console.error('Payment failed:', response.error);
+        setError('Payment failed: ' + response.error.description);
+      });
+      paymentObject.open();
+    } catch (error: any) {
+      console.error('Payment error:', error);
+      setError(error.message || 'An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+      setShowPaymentPopup(false);
+    }
+  };
 
   const amountInPaise = Math.round(
     cart.reduce((sum: number, item: CartItem) => sum + (item.price * item.quantity), 0) * 100
