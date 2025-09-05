@@ -235,7 +235,7 @@ const placeOrder = async () => {
       throw new Error('Invalid total amount');
     }
 
-    const response = await fetch('http://localhost:5000/api/auth/orders/place', {
+    const response = await fetch('https://node-backend-1-yyjm.onrender.com/api/auth/orders/place', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${user.user.token}`,
@@ -283,7 +283,7 @@ const placeOrder = async () => {
             setError('Incomplete payment response from Razorpay');
             return;
           }
-          const verifyRes = await fetch('http://localhost:5000/api/auth/orders/verify', {
+          const verifyRes = await fetch('https://node-backend-1-yyjm.onrender.com/api/auth/orders/verify', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
