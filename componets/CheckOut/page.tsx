@@ -395,7 +395,7 @@ const placeOrder = async () => {
             <div className="bg-gray-50 p-5 rounded-lg">
               <h3 className="text-lg font-sans font-medium text-gray-700 mb-3 text-left">Shipping Information</h3>
               <div className="space-y-2 text-sm font-sans text-gray-600">
-                <div className="flex items-center"><span className="w-24 font-medium">Phone:</span><span>{customerInfo?.phone || 'Not provided'}</span></div>
+                <div className="flex items-center"><span className="w-24 font-medium">Mobile:</span><span>{customerInfo?.mobNo || 'Not provided'}</span></div>
                 <div className="flex items-center"><span className="w-24 font-medium">City:</span><span>{customerInfo?.city || 'Not provided'}</span></div>
                 <div className="flex items-center"><span className="w-24 font-medium">Pincode:</span><span>{customerInfo?.pincode || 'Not provided'}</span></div>
                 <div className="flex items-center"><span className="w-24 font-medium">State:</span><span>{customerInfo?.state || 'Not provided'}</span></div>
