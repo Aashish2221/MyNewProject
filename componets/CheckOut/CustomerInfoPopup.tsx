@@ -12,7 +12,6 @@ interface CustomerInfo {
   name?: string;
   emailId?: string;
   mobNo?: string;
-  phone?: string;
   city?: string;
   pincode?: string;
   state?: string;
@@ -37,7 +36,6 @@ export default function CustomerInfoPopup({ customerInfo, onClose }: { customerI
     name: `${customerInfo?.name || ''}`,
     emailId: customerInfo?.emailId || '',
     mobNo: customerInfo?.mobNo || '',
-    phone: customerInfo?.phone || '',
     city: customerInfo?.city || '',
     pincode: customerInfo?.pincode || '',
     state: customerInfo?.state || '',
@@ -58,8 +56,6 @@ export default function CustomerInfoPopup({ customerInfo, onClose }: { customerI
     else if (!/\S+@\S+\.\S+/.test(formData.emailId)) newErrors.email = 'Invalid email format';
     if (!formData.mobNo) newErrors.mobNo = 'Mobile number is required';
     else if (formData.mobNo.length < 10) newErrors.mobNo = 'Mobile number must be at least 10 digits';
-    if (!formData.phone) newErrors.phone = 'Phone number is required';
-    else if (formData.phone.length < 10) newErrors.phone = 'Phone number must be at least 10 digits';
     if (!formData.city) newErrors.city = 'City is required';
     if (!formData.pincode) newErrors.pincode = 'Pincode is required';
     else if (formData.pincode.length < 6) newErrors.pincode = 'Pincode must be at least 6 digits';
@@ -162,22 +158,6 @@ export default function CustomerInfoPopup({ customerInfo, onClose }: { customerI
               />
             </div>
             {errors.mobNo && <p className="text-red-500 text-xs mt-1">{errors.mobNo}</p>}
-          </div>
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
-            <div className="mt-1 relative">
-              <FaPhone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-              <input
-                id="phone"
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="pl-10 w-full px-3 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 text-sm"
-                placeholder="1234567890"
-              />
-            </div>
-            {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
           </div>
           <div>
             <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
