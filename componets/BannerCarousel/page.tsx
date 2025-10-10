@@ -52,7 +52,7 @@ const banners: Banner[] = [
 
 export default function BannerCarousel() {
   return (
-    <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="w-full mx-auto px-2 py-3">
       <div className="max-w-7xl mx-auto">
         <Swiper
           modules={[Pagination, Autoplay, EffectFade]}
@@ -70,7 +70,7 @@ export default function BannerCarousel() {
             pauseOnMouseEnter: true
           }}
           loop={true}
-          className="rounded-2xl overflow-hidden shadow-2xl !pb-14"
+          className="overflow-hidden shadow-2xl !pb-14"
         >
           {banners.map((banner) => (
             <SwiperSlide key={banner.id}>

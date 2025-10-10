@@ -39,7 +39,7 @@ export default function ProductCarousel({ products }: ProductCarouselProps) {
           spaceBetween={24}
           slidesPerView={1}
           autoplay={{
-            delay: 3500,
+            delay: 2000,
             disableOnInteraction: false,
             pauseOnMouseEnter: true
           }}
@@ -190,8 +190,8 @@ export default function ProductCarousel({ products }: ProductCarouselProps) {
         .swiper-pagination-bullet {
           background: #cbd5e1;
           opacity: 1;
-          width: 8px;
-          height: 8px;
+          width: 20px;
+          height: 20px;
           transition: all 0.3s ease;
         }
         .swiper-pagination-bullet-active {

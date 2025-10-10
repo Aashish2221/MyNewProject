@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <main className="flex-grow">
              <div className="">
-               <section className="py-5">
+               <section className="">
                  <BannerCarousel />
                </section>
                {/* <section className="text-center py-5">
