@@ -224,6 +224,8 @@ const placeOrder = async () => {
       state: customerInfo.state || '',
       pincode: customerInfo.pincode || '',
       phone: customerInfo.phone || '',
+      emailID: customerInfo.emailId || user.user.email || '',
+      name: customerInfo.firstName + ' ' + (customerInfo.lastName) || "",
     };
 
     const totalAmount = cart.reduce((sum: number, item: CartItem) => {
