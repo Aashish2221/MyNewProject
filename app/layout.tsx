@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { CartProvider } from '@/componets/CartContext/page';
 import Header from '@/componets/Header/page';
 import Footer from '@/componets/Footer/page';
 import AuthProvider from '@/redux/providers/authprovider';

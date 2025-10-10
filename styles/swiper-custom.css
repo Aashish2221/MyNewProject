@@ -1,0 +1,62 @@
+/* Custom styles for Swiper navigation arrows */
+.swiper-button-next,
+.swiper-button-prev {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #000000; /* Black icon color to match image */
+  background: #ffffff; /* White background to match image */
+  border-radius: 50%; /* Fully rounded box */
+  width: 100px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow to match image */
+  transition: background 0.3s ease, transform 0.3s ease;
+  z-index: 10; /* Ensure arrows are above carousel */
+  border: 1px solid #e5e7eb; /* Light border for a clean look */
+}
+
+/* Position arrows outside the carousel */
+.swiper-button-prev {
+  left: -200px; /* Move left arrow outside */
+}
+.swiper-button-next {
+  right: -50px; /* Move right arrow outside */
+}
+
+/* Hover effects */
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: #f9fafb; /* Very light gray on hover */
+  transform: translateY(-50%) scale(1.1); /* Slight scale-up on hover */
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+  .swiper-button-prev {
+    left: -20px; /* Closer on mobile */
+  }
+  .swiper-button-next {
+    right: -20px; /* Closer on mobile */
+  }
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Adjust arrow icon size */
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 32px; /* Adjusted icon size to match image proportion */
+}
+
+/* Ensure arrows are visible and clickable */
+.swiper-button-next.swiper-button-disabled,
+.swiper-button-prev.swiper-button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

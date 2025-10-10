@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
     "@reduxjs/toolkit": "^2.8.2",
     "@stripe/stripe-js": "^7.8.0",
     "axios": "^1.11.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
+    "lucide-react": "^0.545.0",
     "next": "^15.4.5",
     "razorpay": "^2.9.6",
     "react": "19.1.0",
@@ -20,7 +24,10 @@
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
-    "stripe": "^14.2.0"
+    "stripe": "^14.2.0",
+    "swiper": "^12.0.2",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
