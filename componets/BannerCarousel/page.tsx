@@ -39,7 +39,7 @@ export default function BannerCarousel() {
               <Image
                 src={banner.image}
                 alt={banner.title || `Banner ${banner.id}`}
-                width={1200}
+                width={800}
                 height={400}
                 priority
                 className="object-cover w-full h-full rounded-lg"
