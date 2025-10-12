@@ -1,30 +1,32 @@
-import BannerCarousel from "@/componets/BannerCarousel/page";
-import ProductCarousel from "@/componets/ProductCarousel/page";
-import ProductGrid from "@/componets/ProductGrid";
-import { products } from "@/data";
+import DashboardBanner from "@/componets/DashboarBanner/page";
+import ProductSection from "@/componets/ProductSection/page";
+import { productCategories } from "@/data/products";
 
-export default function Home() {
+function App() {
+  const variants: Array<'default' | 'compact' | 'featured' | 'minimal' | 'elegant'> = [
+   
+    'elegant',
+    
+  ];
+
+  const itemsPerRow = [4];
+
   return (
-    <>
-      <main className="flex-grow">
-             <div className="">
-               <section className="">
-                 <BannerCarousel />
-               </section>
-               {/* <section className="text-center py-5">
-                 <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                   New Product
-                 </h2>
-                 <ProductGrid />
-               </section> */}
-               <section className="py-5">
-                 <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-                   Related Products
-                 </h2>
-                 <ProductCarousel products={products} />
-               </section>
-             </div>
-           </main>
-    </>
+    <div className="min-h-screen bg-slate-50">
+      <DashboardBanner />
+
+      <main>
+        {productCategories.map((category, index) => (
+          <ProductSection
+            key={category.id}
+            category={category}
+            variant={variants[index % variants.length]}
+            itemsPerRow={itemsPerRow[index % itemsPerRow.length]}
+          />
+        ))}
+      </main>
+    </div>
   );
 }
+
+export default App;

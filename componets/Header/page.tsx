@@ -47,13 +47,13 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 bg-black rounded-lg">
             <Link href="/" onClick={closeMobileMenu} className="text-2xl font-bold">
               <Image
-                src="/ChatGPT Image Aug 6, 2025, 09_24_26 PM.png"
+                src="/LOGOIMAGE.webp"
                 alt="Logo"
-                width={60}
-                height={60}
+                width={100}
+                height={100}
                 className="rounded-full sm:w-16 sm:h-16"
                 priority
               />
