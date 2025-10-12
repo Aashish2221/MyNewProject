@@ -4,9 +4,7 @@ import { productCategories } from "@/data/products";
 
 function App() {
   const variants: Array<'default' | 'compact' | 'featured' | 'minimal' | 'elegant'> = [
-   
     'elegant',
-    
   ];
 
   const itemsPerRow = [4];
