@@ -28,7 +28,7 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          className="w-auto h-auto object-custome group-hover:scale-110 transition-transform duration-500"
         />
         {product.discount && (
           <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">

@@ -22,10 +22,10 @@ export default function CartClient({ cart }: CartClientProps) {
   const reduxCart = useSelector(selectCart) || [];
 
   // Use the passed cart prop if available, otherwise fallback to Redux cart
-  const displayCart = cart.length > 0 ? cart : reduxCart;
+  const displayCart: CartItem[] = (cart.length > 0 ? cart : reduxCart) as CartItem[];
 
   const total = displayCart.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0).toFixed(2);
-
+  console.log('Display Cart:', displayCart);
   if (displayCart.length === 0) {
     return (
       <div className="min-h-screen bg-gray-100 py-16 text-center">
@@ -44,7 +44,7 @@ export default function CartClient({ cart }: CartClientProps) {
         <div className="space-y-4">
           {displayCart.map((item: CartItem) => (
             <div key={item.id} className="flex items-center border-b pb-4">
-              <Image
+              <img
                 src={item.image}
                 alt={item.name}
                 width={100}

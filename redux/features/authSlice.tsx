@@ -1,13 +1,14 @@
+import { Product } from '@/types/products';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define the product type
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-}
+// interface Product {
+//   id: number;
+//   name: string;
+//   price: number;
+//   image: string;
+//   description: string;
+// }
 
 // Define the cart item type
 interface CartItem extends Product {

@@ -52,8 +52,8 @@ export default function Navbar() {
               <Image
                 src="/LOGOIMAGE.webp"
                 alt="Logo"
-                width={100}
-                height={100}
+                width={80}
+                height={80}
                 className="rounded-full sm:w-16 sm:h-16"
                 priority
               />

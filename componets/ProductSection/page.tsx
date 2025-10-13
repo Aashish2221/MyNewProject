@@ -1,33 +1,20 @@
 "use client";
 import { useState, useRef, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ProductCategory } from '@/types/products';
+import { useRouter } from 'next/navigation';
 import ProductCard from '../ProductCart/page';
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-  rating?: number;
-  discount?: number;
-}
 
-export interface ProductCategory {
-  id: string;
-  title: string;
-  products: Product[];
-}
 interface ProductSectionProps {
   category: ProductCategory;
   variant?: 'default' | 'compact' | 'featured' | 'minimal' | 'elegant';
-  itemsPerRow?: number;
 }
 
 export default function ProductSection({
   category,
   variant = 'default',
-  itemsPerRow = 5
 }: ProductSectionProps) {
+  const router = useRouter();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
@@ -69,31 +56,19 @@ export default function ProductSection({
     }
   };
 
-//   const sectionStyles = {
-//     default: 'bg-white py-8 md:py-12',
-//     compact: 'bg-slate-50 py-6 md:py-10',
-//     featured: 'bg-gradient-to-br from-slate-50 to-white py-8 md:py-12',
-//     minimal: 'bg-white py-6 md:py-10 border-y border-slate-100',
-//     elegant: 'bg-gradient-to-r from-white via-slate-50 to-white py-8 md:py-12',
-//   };
-
-//   const titleStyles = {
-//     default: 'text-2xl md:text-3xl lg:text-4xl font-bold text-slate-800 mb-6 md:mb-8',
-//     compact: 'text-xl md:text-2xl font-bold text-slate-800 mb-4 md:mb-6',
-//     featured: 'text-3xl md:text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-800 to-slate-600 mb-6 md:mb-8',
-//     minimal: 'text-2xl md:text-3xl font-semibold text-slate-700 mb-4 md:mb-6',
-//     elegant: 'text-2xl md:text-3xl lg:text-4xl font-bold text-slate-800 mb-6 md:mb-8 tracking-tight',
-//   };
-
-  const gridCols = {
-    4: 'md:grid-cols-2 lg:grid-cols-4',
-    5: 'md:grid-cols-3 lg:grid-cols-5',
-  }[itemsPerRow] || 'md:grid-cols-3 lg:grid-cols-5';
-
   return (
     <section className={"bg-gradient-to-r from-white via-slate-50 to-white py-8 md:py-12"}>
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        <h2 className={"text-2xl md:text-3xl lg:text-4xl font-bold text-slate-800 mb-6 md:mb-8 tracking-tight"}>{category.title}</h2>
+        <div className="flex items-center justify-between mb-6 md:mb-8">
+          <h2 className={"text-2xl md:text-3xl lg:text-4xl font-bold text-slate-800 tracking-tight"}>{category.title}</h2>
+          <a
+            href={`/${category.title.toLowerCase()}`}
+            className="flex items-center gap-2 text-sm md:text-base font-semibold text-slate-700 hover:text-slate-900 transition-colors group"
+          >
+            View All
+            <ArrowRight className="w-4 h-4 md:w-5 md:h-5 group-hover:translate-x-1 transition-transform" />
+          </a>
+        </div>
 
         <div className="relative">
           {isMobile ? (
@@ -102,8 +77,12 @@ export default function ProductSection({
                 ref={scrollContainerRef}
                 className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory pb-4"
               >
-                {category.products.map((product) => (
-                  <div key={product.id} className="flex-shrink-0 w-[280px] snap-start">
+                {category.products.slice(0, 4).map((product) => (
+                  <div
+                    key={product.id}
+                    className="flex-shrink-0 w-[280px] snap-start"
+                    onClick={() => router.push(`/product/${product.id}`)}
+                  >
                     <ProductCard product={product} variant={variant} />
                   </div>
                 ))}
@@ -130,9 +109,11 @@ export default function ProductSection({
               )}
             </>
           ) : (
-            <div className={`grid grid-cols-2 ${gridCols} gap-4 md:gap-6`}>
-              {category.products.map((product) => (
-                <ProductCard key={product.id} product={product} variant={variant} />
+            <div className={`grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6`}>
+              {category.products.slice(0, 4).map((product) => (
+                <div key={product.id} onClick={() => router.push(`/product/${product.id}`)}>
+                  <ProductCard product={product} variant={variant} />
+                </div>
               ))}
             </div>
           )}

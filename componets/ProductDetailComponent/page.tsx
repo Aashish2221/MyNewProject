@@ -27,7 +27,7 @@ export default function ProductDetail({ product }: ProductDetailProps) {
         <h2 className="text-2xl font-bold text-gray-800 mt-4">{product.name}</h2>
         <p className="text-pink-600 text-xl mt-2">${product.price}</p>
         <p className="text-gray-600 mt-4">{product.description}</p>
-        <AddToCartButton product={product} />
+        {/* <AddToCartButton product={product} /> */}
       </div>
     </div>
   );
