@@ -14,7 +14,7 @@ export default function Navbar() {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const pathname = usePathname();
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Handle scroll effect for navbar background
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Navbar() {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event:any) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsUserDropdownOpen(false);
       }
@@ -83,7 +83,7 @@ export default function Navbar() {
     { href: '/contactUs', label: 'Contact', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
   ];
 
-  const isActive = (path) => pathname === path;
+  const isActive = (path:string) => pathname === path;
 
   return (
     <>
