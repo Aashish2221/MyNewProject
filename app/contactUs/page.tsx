@@ -57,8 +57,15 @@ export default function ContactPage() {
         setFormData({ name: '', email: '', message: '' });
         setSuccessMessage('Thank you! We\'ll get back to you soon.');
       }
-    } catch (error: any) {
-      setErrors({ general: error.response?.data?.message || 'Failed to send message. Please try again.' });
+    } catch (error: unknown) {
+      // Narrow the unknown error. If it's an AxiosError, use the response message; otherwise fallback.
+      if (axios.isAxiosError(error)) {
+        setErrors({ general: (error.response)?.data?.message || 'Failed to send message. Please try again.' });
+      } else if (error instanceof Error) {
+        setErrors({ general: error.message || 'Failed to send message. Please try again.' });
+      } else {
+        setErrors({ general: 'Failed to send message. Please try again.' });
+      }
     } finally {
       setIsLoading(false);
     }
