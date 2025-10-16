@@ -100,7 +100,7 @@ export default function ContactPage() {
               Get In Touch
             </h1>
             <p className="text-gray-600 max-w-md mx-auto">
-              Have questions about our resin art? We'd love to hear from you! Fill out the form below.
+              Have questions about our resin art? We&apos;d love to hear from you! Fill out the form below.
             </p>
           </div>
 

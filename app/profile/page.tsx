@@ -12,16 +12,6 @@ const mockUser: UserProfile = {
 };
 
 function ProfilePage() {
-  const handleLogout = () => {
-    // Handle logout logic (e.g., clear auth, redirect to login)
-    console.log('Logging out...');
-  };
-
-  const handleEditProfile = () => {
-    // Optional: Open modal or navigate to edit page
-    console.log('Editing profile...');
-  };
-
   return (
     <UserProfilePage
       user={mockUser}
