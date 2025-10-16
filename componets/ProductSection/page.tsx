@@ -80,7 +80,7 @@ export default function ProductSection({
                 {category.products.slice(0, 4).map((product) => (
                   <div
                     key={product.id}
-                    className="flex-shrink-0 w-[280px] snap-start"
+                    className="flex-shrink-0 w-[270px] snap-start"
                     onClick={() => router.push(`/product/${product.id}`)}
                   >
                     <ProductCard product={product} variant={variant} />
