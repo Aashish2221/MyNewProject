@@ -10,6 +10,8 @@ export interface Product {
 }
 
 export interface ProductCategory {
+  image: any;
+  image: any;
   id: string;
   title: string;
   products: Product[];

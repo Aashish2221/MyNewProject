@@ -45,7 +45,7 @@ export default function DashboardBanner() {
   };
 
   return (
-    <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden bg-slate-900">
+    <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden bg-slate-900 mt-10 lg:mt-20">
       {banners.map((banner, index) => (
         <div
           key={banner.id}

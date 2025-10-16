@@ -4,6 +4,7 @@ export const productCategories: ProductCategory[] = [
   {
     id: 'electronics',
     title: 'electronics',
+    image: '/products/electronics_category.webp',
     products: [
       { id: 1, name: 'Wireless Headphones', price: 79.99, image: '/products/alphabet_keychains.webp', category: 'electronics', rating: 4.5, discount: 15, description: 'Premium wireless headphones with noise cancellation and 30-hour battery life. Perfect for music lovers and commuters.' },
       { id: 2, name: 'Smart Watch', price: 199.99, image: '/products/ganesha_resin.webp', category: 'electronics', rating: 4.8, description: 'Advanced fitness tracking smartwatch with heart rate monitor, GPS, and 7-day battery life.' },
@@ -15,6 +16,7 @@ export const productCategories: ProductCategory[] = [
   {
     id: 'fashion',
     title: 'fashion',
+    image: '/products/fashion_category.webp',
     products: [
       { id: 6, name: 'Denim Jacket', price: 89.99, image: 'https://images.pexels.com/photos/1126993/pexels-photo-1126993.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'fashion', rating: 4.4, discount: 20, description: 'Classic denim jacket with vintage wash. Comfortable fit and timeless style for any season.' },
       { id: 7, name: 'Sneakers', price: 119.99, image: 'https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'fashion', rating: 4.9, description: 'Premium athletic sneakers with breathable mesh and cushioned sole for maximum comfort.' },
@@ -26,6 +28,7 @@ export const productCategories: ProductCategory[] = [
   {
     id: 'home',
     title: 'essentials',
+    image: '/products/home_category.webp',
     products: [
       { id: 11, name: 'Table Lamp', price: 49.99, image: 'https://images.pexels.com/photos/1112598/pexels-photo-1112598.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'home', rating: 4.5 },
       { id: 12, name: 'Throw Pillows', price: 29.99, image: 'https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'home', rating: 4.2 },
@@ -37,6 +40,7 @@ export const productCategories: ProductCategory[] = [
   {
     id: 'sports',
     title: 'fitness',
+    image: '/products/sports_category.webp',
     products: [
       { id: 16, name: 'Yoga Mat', price: 39.99, image: 'https://images.pexels.com/photos/4056723/pexels-photo-4056723.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'sports', rating: 4.6 },
       { id: 17, name: 'Dumbbells Set', price: 89.99, image: 'https://images.pexels.com/photos/416778/pexels-photo-416778.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'sports', rating: 4.8, discount: 15 },
@@ -48,6 +52,7 @@ export const productCategories: ProductCategory[] = [
   {
     id: 'books',
     title: 'books',
+    image: '/products/books_category.webp',
     products: [
       { id: 21, name: 'Fiction Novel', price: 14.99, image: 'https://images.pexels.com/photos/1053692/pexels-photo-1053692.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'books', rating: 4.7 },
       { id: 22, name: 'Self-Help Guide', price: 19.99, image: 'https://images.pexels.com/photos/1130980/pexels-photo-1130980.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'books', rating: 4.8, discount: 30 },
@@ -59,6 +64,7 @@ export const productCategories: ProductCategory[] = [
   {
     id: 'beauty',
     title: 'care',
+    image: '/products/beauty_category.webp',
     products: [
       { id: 26, name: 'Skincare Set', price: 79.99, image: 'https://images.pexels.com/photos/3018845/pexels-photo-3018845.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'beauty', rating: 4.8, discount: 20 },
       { id: 27, name: 'Hair Dryer', price: 59.99, image: 'https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg?auto=compress&cs=tinysrgb&w=400', category: 'beauty', rating: 4.5 },

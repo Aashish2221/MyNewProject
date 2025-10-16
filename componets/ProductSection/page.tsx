@@ -80,7 +80,7 @@ export default function ProductSection({
                 {category.products.slice(0, 4).map((product) => (
                   <div
                     key={product.id}
-                    className="flex-shrink-0 w-[270px] snap-start"
+                    className="flex-shrink-0 w-[270px] snap-start cursor-pointer"
                     onClick={() => router.push(`/product/${product.id}`)}
                   >
                     <ProductCard product={product} variant={variant} />
@@ -111,7 +111,7 @@ export default function ProductSection({
           ) : (
             <div className={`grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6`}>
               {category.products.slice(0, 4).map((product) => (
-                <div key={product.id} onClick={() => router.push(`/product/${product.id}`)}>
+                <div className='cursor-pointer' key={product.id} onClick={() => router.push(`/product/${product.id}`)}>
                   <ProductCard product={product} variant={variant} />
                 </div>
               ))}

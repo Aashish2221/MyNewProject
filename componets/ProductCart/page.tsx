@@ -1,4 +1,5 @@
-import { ShoppingCart, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
+
 export interface Product {
   id: number;
   name: string;
@@ -21,38 +22,53 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, variant = 'default' }: ProductCardProps) {
+  // Basic variant handling for flexibility (can be expanded later)
+  const baseClasses = 'bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200 group';
+  const paddingClasses = variant === 'compact' ? 'p-2' : variant === 'featured' ? 'p-6' : 'p-4';
+  const textSizeClasses = variant === 'compact' ? 'text-xs' : variant === 'featured' ? 'text-lg font-bold' : 'text-sm font-medium';
+  const imageClasses = variant === 'compact' ? 'aspect-square' : 'aspect-[4/3] md:aspect-square';
+
+  // Calculate original price if discount exists (assuming product.price is discounted price)
+  const originalPrice = product.discount ? (product.price / (1 - product.discount / 100)).toFixed(2) : null;
 
   return (
-    <div className={"bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-slate-100 group"}>
-      <div className="relative overflow-hidden aspect-square">
-        <img
-          src={product.image}
+    <div className={baseClasses}>
+      <div className={`relative overflow-hidden ${imageClasses}`}>
+        <img 
+          src={product.image} 
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          loading="lazy"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-100 group-hover:brightness-105" 
         />
-        {/* {product.discount && (
-          <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+        {product.discount && (
+          <div className="absolute top-3 right-3 bg-gradient-to-r from-red-500 to-pink-600 text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg">
             -{product.discount}%
           </div>
-        )} */}
+        )}
+        {/* Optional subtle overlay for better text contrast on featured variant */}
+        {variant === 'featured' && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+        )}
       </div>
-      <div className="p-3 md:p-4">
-        <h3 className="font-semibold text-sm md:text-base text-slate-800 mb-1 md:mb-2 line-clamp-1">
+      <div className={paddingClasses}>
+        <h3 className={`${textSizeClasses} text-gray-800 mb-2 line-clamp-2 leading-tight group-hover:text-gray-900 transition-colors`}>
           {product.name}
         </h3>
         {product.rating && (
-          <div className="flex items-center gap-1 mb-2">
-            <Star className="w-3 h-3 md:w-4 md:h-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs md:text-sm text-slate-600">{product.rating}</span>
+          <div className="flex items-center gap-1 mb-3">
+            <Star className={`w-4 h-4 fill-yellow-400 text-yellow-400 ${variant === 'compact' ? 'w-3 h-3' : ''}`} />
+            <span className={`text-xs text-gray-600 font-medium ${variant === 'compact' ? 'text-xs' : 'text-sm'}`}>
+              {product.rating} / 5
+            </span>
           </div>
         )}
         <div className="flex items-center justify-between">
-          <span className="text-lg md:text-xl font-bold text-slate-900">
-            ${product.price}
+          <span className={`text-xl font-bold text-gray-900 ${variant === 'compact' ? 'text-lg' : variant === 'featured' ? 'text-2xl' : ''}`}>
+            ${product.price.toFixed(2)}
           </span>
-          {product.discount && (
-            <span className="text-xs md:text-sm text-slate-400 line-through">
-              ${(product.price / (1 - product.discount / 100)).toFixed(2)}
+          {originalPrice && (
+            <span className={`text-sm text-gray-400 line-through ${variant === 'compact' ? 'text-xs' : ''}`}>
+              ${originalPrice}
             </span>
           )}
         </div>
