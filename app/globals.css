@@ -1,41 +1,58 @@
 @import "tailwindcss";
 
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+:root {
+  --gold: #c9a84c;
+  --gold-light: #e8c97e;
+  --gold-dark: #a07830;
+  --rose: #c4576b;
+  --blush: #f5d0d8;
+  --charcoal: #1a1a1a;
+  --cream: #faf7f2;
 }
 
-@keyframes fade-in-delay {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-.animate-fade-in {
-  animation: fade-in 0.8s ease-out;
+body {
+  background-color: var(--cream);
+  color: var(--charcoal);
+  font-family: 'Georgia', serif;
+  overflow-x: hidden;
 }
 
-.animate-fade-in-delay {
-  animation: fade-in-delay 0.8s ease-out 0.2s both;
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+/* Gold gradient text */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #c9a84c, #e8c97e, #a07830);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+/* Gallery hover effect */
+.gallery-item { overflow: hidden; }
+.gallery-item img { transition: transform 0.5s ease; }
+.gallery-item:hover img { transform: scale(1.08); }
+
+/* Glass morphism card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(201, 168, 76, 0.2);
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+/* Decorative divider */
+.gold-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #c9a84c, transparent);
 }
+
+/* Swiper custom */
+.swiper-pagination-bullet-active { background: var(--gold) !important; }
+.swiper-button-next,
+.swiper-button-prev { color: var(--gold) !important; }

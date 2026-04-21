@@ -1,25 +1,31 @@
-import DashboardBanner from "@/componets/DashboarBanner/page";
-import ProductSection from "@/componets/ProductSection/page";
-import { productCategories } from "@/data/products";
+import Navbar from "@/components/Navbar";
+import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Services from "@/components/Services";
+import Portfolio from "@/components/Portfolio";
+import Process from "@/components/Process";
+import ReviewSection from "@/components/ReviewSection";
+import Blog from "@/components/Blog";
+import Contact from "@/components/Contact";
+import Footer from "@/components/Footer";
+import FloatingActions from "@/components/FloatingActions";
 
-function App() {
-  const variants: Array<'elegant'> = [
-    'elegant',
-  ];
+export default function Home() {
   return (
-    <div className="min-h-screen bg-slate-50">
-      <DashboardBanner />
+    <>
+      <Navbar />
       <main>
-        {productCategories.map((category, index) => (
-          <ProductSection
-            key={category.id}
-            category={category}
-            variant={variants[index % variants.length]}
-          />
-        ))}
+        <Hero />
+        <About />
+        <Services />
+        <Portfolio />
+        <Process />
+        <ReviewSection />
+        <Blog />
+        <Contact />
       </main>
-    </div>
+      <Footer />
+      <FloatingActions />
+    </>
   );
 }
-
-export default App;
