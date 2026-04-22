@@ -174,7 +174,7 @@ export default async function BlogDetailPage({
               </p>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Award-winning makeup artist with 10+ years of experience across bridal, editorial,
-                and special effects makeup. Based in Mumbai, serving clients across India.
+                and special effects makeup. Based in Pune, serving clients across Maharashtra.
               </p>
             </div>
           </div>

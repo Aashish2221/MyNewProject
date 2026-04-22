@@ -109,8 +109,8 @@ export default function About() {
 
             <p className="text-gray-600 leading-relaxed mb-4">
               With over a decade of experience in the beauty industry, I have had the privilege of
-              enhancing the natural beauty of thousands of women across India. From intimate
-              weddings in Rajasthan to high-fashion shoots in Mumbai, every look I create is
+              enhancing the natural beauty of thousands of women across Maharashtra. From intimate
+              Marathi weddings in Pune and Nashik to high-fashion shoots in Mumbai and Pune, every look I create is
               a reflection of my client's inner radiance — elevated.
             </p>
 

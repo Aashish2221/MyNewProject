@@ -94,7 +94,7 @@ export default function Hero() {
           className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed"
         >
           Transforming faces, creating confidence. Specializing in Bridal, Editorial,
-          Airbrush & Special Effects Makeup across India.
+          Airbrush & Special Effects Makeup across Maharashtra.
         </motion.p>
 
         {/* CTA Buttons */}

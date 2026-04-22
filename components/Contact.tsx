@@ -215,15 +215,15 @@ export default function Contact() {
                 Let&apos;s Create Magic Together
               </h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                Whether you&apos;re planning your dream wedding or need a show-stopping look for a
-                photoshoot, I&apos;m here to bring your vision to life. Based in Mumbai, available
-                for travel across India.
+                Whether you&apos;re planning your dream Marathi wedding or need a show-stopping look for a
+                photoshoot, I&apos;m here to bring your vision to life. Based in Pune, available
+                for travel across Maharashtra.
               </p>
 
               {[
                 { icon: Phone, label: "+91 98765 XXXXX", sub: "Mon – Sat, 10am – 7pm" },
                 { icon: Mail, label: "hello@poonambeauty.com", sub: "Replies within 24 hours" },
-                { icon: MapPin, label: "Mumbai, Maharashtra", sub: "Available to travel pan-India" },
+                { icon: MapPin, label: "Pune, Maharashtra", sub: "Serving all of Maharashtra" },
               ].map(({ icon: Icon, label, sub }) => (
                 <div key={label} className="flex items-start gap-4">
                   <div

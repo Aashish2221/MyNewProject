@@ -30,7 +30,7 @@ export const posts: BlogPost[] = [
     content: [
       {
         type: "intro",
-        text: "Your wedding day is arguably the most photographed day of your life. As a professional makeup artist who has worked on hundreds of brides across India, I've learned that the difference between a look that lasts 6 hours and one that lasts 16 hours is almost entirely in the preparation — not the products.",
+        text: "Your wedding day is arguably the most photographed day of your life. As a professional makeup artist who has worked on hundreds of brides across Maharashtra — from Mumbai to Pune, Nashik to Nagpur — I've learned that the difference between a look that lasts 6 hours and one that lasts 16 hours is almost entirely in the preparation — not the products.",
       },
       {
         type: "h2",
@@ -400,7 +400,7 @@ export const posts: BlogPost[] = [
       },
       {
         type: "p",
-        text: "Perhaps the most meaningful trend: brides are reclaiming traditional Indian bridal aesthetics — the red lip, the kajal-rimmed eye, the sindoor-ready hairline — but with modern techniques. Better skin prep, longer-lasting formulas, and refined blending mean the classic look has never been more stunning.",
+        text: "Perhaps the most meaningful trend: Maharashtra brides are reclaiming traditional Marathi bridal aesthetics — the red-and-green nauvari saree look, the kajal-rimmed eye, the gold nath, the sindoor-ready hairline — but with modern techniques. Better skin prep, longer-lasting formulas, and refined blending mean the classic Maharashtrian look has never been more stunning.",
       },
       {
         type: "h2",

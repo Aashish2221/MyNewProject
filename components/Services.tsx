@@ -9,7 +9,7 @@ const services = [
     title: "Bridal Makeup",
     tagline: "Your perfect wedding look",
     description:
-      "Your wedding day deserves perfection. I craft long-wearing, photogenic bridal looks tailored to your skin tone, outfit, and personal style — from traditional to contemporary.",
+      "Your wedding day deserves perfection. I craft long-wearing, photogenic bridal looks tailored to your skin tone, outfit, and personal style — from classic Marathi nauvari sari looks to contemporary glam.",
     includes: ["Trial session", "Day-of application", "Touch-up kit", "Reception look"],
     price: "Starting ₹8,000",
     popular: true,
@@ -19,7 +19,7 @@ const services = [
     title: "Party & Event Makeup",
     tagline: "Glamour for every celebration",
     description:
-      "Whether it's a sangeet, birthday bash, or corporate gala — I create stunning looks that last all night and photograph beautifully under any lighting.",
+      "Whether it's a Ganesh Chaturthi celebration, Gudi Padwa puja, sangeet, or corporate gala — I create stunning looks that last all night and photograph beautifully under any lighting.",
     includes: ["Consultation", "Custom look", "Long-lasting formula", "Touch-up tips"],
     price: "Starting ₹3,500",
     popular: false,
@@ -160,8 +160,7 @@ export default function Services() {
           transition={{ delay: 0.8 }}
           className="text-center text-gray-500 text-sm mt-10"
         >
-          * Travel charges may apply for locations outside Mumbai. All prices include professional
-          makeup products, tools, and skin preparation.
+          * Serving Pune, Mumbai, Thane, Navi Mumbai, Nashik, Nagpur, Aurangabad & all of Maharashtra. Travel charges may apply for locations outside Pune. All prices include professional makeup products, tools, and skin preparation.
         </motion.p>
       </div>
     </section>

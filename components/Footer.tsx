@@ -48,7 +48,7 @@ export default function Footer() {
             </p>
             <p className="text-sm leading-relaxed max-w-xs">
               Transforming faces and creating confidence through the art of makeup. Based in
-              Mumbai, serving clients across India.
+              Pune, serving clients across Maharashtra.
             </p>
             <div className="flex gap-3 mt-6">
               {[
