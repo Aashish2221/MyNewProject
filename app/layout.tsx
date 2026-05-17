@@ -135,6 +135,125 @@ export default function RootLayout({
             }),
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ItemList",
+              name: "Makeup Services by Poonam",
+              url: "https://poonammakeupartist.vercel.app/#services",
+              itemListElement: [
+                {
+                  "@type": "Service",
+                  position: 1,
+                  name: "Bridal Makeup",
+                  description: "Long-wearing, photogenic bridal looks tailored to your skin tone — from classic Marathi nauvari sari looks to contemporary glam.",
+                  provider: { "@type": "LocalBusiness", name: "Poonam Beauty" },
+                  areaServed: "Maharashtra",
+                  offers: { "@type": "Offer", price: "8000", priceCurrency: "INR", availability: "https://schema.org/InStock" },
+                },
+                {
+                  "@type": "Service",
+                  position: 2,
+                  name: "Party & Event Makeup",
+                  description: "Stunning looks for Ganesh Chaturthi, Gudi Padwa, sangeet, corporate gala and more that last all night.",
+                  provider: { "@type": "LocalBusiness", name: "Poonam Beauty" },
+                  areaServed: "Maharashtra",
+                  offers: { "@type": "Offer", price: "3500", priceCurrency: "INR", availability: "https://schema.org/InStock" },
+                },
+                {
+                  "@type": "Service",
+                  position: 3,
+                  name: "Airbrush Makeup",
+                  description: "Poreless, camera-perfect complexion that is lightweight and lasts 16+ hours — ideal for brides and shoots.",
+                  provider: { "@type": "LocalBusiness", name: "Poonam Beauty" },
+                  areaServed: "Maharashtra",
+                  offers: { "@type": "Offer", price: "6000", priceCurrency: "INR", availability: "https://schema.org/InStock" },
+                },
+                {
+                  "@type": "Service",
+                  position: 4,
+                  name: "Editorial & Shoot Makeup",
+                  description: "Concept-driven makeup for fashion shoots, ad campaigns and lookbooks across Maharashtra.",
+                  provider: { "@type": "LocalBusiness", name: "Poonam Beauty" },
+                  areaServed: "Maharashtra",
+                  offers: { "@type": "Offer", price: "5000", priceCurrency: "INR", availability: "https://schema.org/InStock" },
+                },
+                {
+                  "@type": "Service",
+                  position: 5,
+                  name: "Natural Glow Makeup",
+                  description: "Less-is-more artistry that enhances your best features for day events and pre-engagement sessions.",
+                  provider: { "@type": "LocalBusiness", name: "Poonam Beauty" },
+                  areaServed: "Maharashtra",
+                  offers: { "@type": "Offer", price: "2500", priceCurrency: "INR", availability: "https://schema.org/InStock" },
+                },
+                {
+                  "@type": "Service",
+                  position: 6,
+                  name: "Special Effects (SFX) Makeup",
+                  description: "Prosthetics, wounds, aging effects and character transformations for Bollywood productions and events.",
+                  provider: { "@type": "LocalBusiness", name: "Poonam Beauty" },
+                  areaServed: "Maharashtra",
+                  offers: { "@type": "Offer", price: "10000", priceCurrency: "INR", availability: "https://schema.org/InStock" },
+                },
+              ],
+            }),
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: [
+                {
+                  "@type": "Question",
+                  name: "How much does bridal makeup cost in Pune?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Poonam's bridal makeup starts at ₹8,000 in Pune and Maharashtra. This includes a trial session, day-of application, touch-up kit, and reception look. Airbrush bridal makeup starts at ₹10,000.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Does Poonam travel across Maharashtra for bridal makeup?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes, Poonam is available for bridal and event makeup across Maharashtra including Mumbai, Pune, Nashik, Nagpur, Thane, Aurangabad, Navi Mumbai, and Kolhapur.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "How far in advance should I book a bridal makeup artist?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "It is recommended to book your bridal makeup artist at least 3–6 months in advance, especially for peak wedding season (October to February). A trial session should be done at least 6 weeks before the wedding day.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "What is airbrush makeup and is it good for brides?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Airbrush makeup is applied using a fine mist sprayer, creating a flawless, long-lasting, and waterproof finish. It is highly recommended for brides as it lasts 12–16 hours and holds up through tears, heat, and dancing.",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "Does Poonam offer party and event makeup in Maharashtra?",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes, Poonam offers party and event makeup starting at ₹3,500 for occasions such as sangeet, Ganesh Chaturthi, Gudi Padwa, corporate events, and more across Maharashtra.",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body className="min-h-full antialiased" style={{ fontFamily: "var(--font-montserrat), sans-serif" }}>
         {children}

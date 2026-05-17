@@ -39,7 +39,7 @@ export async function generateMetadata({
       authors: ["Poonam"],
     },
     alternates: {
-      canonical: `https://www.poonambeauty.com/blog/${slug}`,
+      canonical: `https://poonammakeupartist.vercel.app/blog/${slug}`,
     },
   };
 }
@@ -74,13 +74,56 @@ export default async function BlogDetailPage({
             "@type": "Article",
             headline: post.title,
             description: post.excerpt,
-            author: { "@type": "Person", name: "Poonam" },
+            author: {
+              "@type": "Person",
+              name: "Poonam",
+              url: "https://poonammakeupartist.vercel.app",
+            },
             datePublished: post.date,
             publisher: {
               "@type": "Organization",
               name: "Poonam Beauty",
-              url: "https://www.poonambeauty.com",
+              url: "https://poonammakeupartist.vercel.app",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://poonammakeupartist.vercel.app/opengraph-image",
+              },
             },
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `https://poonammakeupartist.vercel.app/blog/${slug}`,
+            },
+          }),
+        }}
+      />
+
+      {/* Breadcrumb structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://poonammakeupartist.vercel.app",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Blog",
+                item: "https://poonammakeupartist.vercel.app/#blog",
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: post.title,
+                item: `https://poonammakeupartist.vercel.app/blog/${slug}`,
+              },
+            ],
           }),
         }}
       />

@@ -104,19 +104,19 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.9 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
         >
-          <button
-            onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+          <a
+            href="#contact"
             className="px-10 py-4 text-sm tracking-[0.25em] uppercase font-medium text-[#1a1a1a] transition-all duration-300 hover:shadow-lg hover:shadow-[#c9a84c]/30 hover:-translate-y-0.5"
             style={{ background: "linear-gradient(135deg, #c9a84c, #e8c97e, #a07830)" }}
           >
             Book Your Session
-          </button>
-          <button
-            onClick={() => document.querySelector("#portfolio")?.scrollIntoView({ behavior: "smooth" })}
+          </a>
+          <a
+            href="#portfolio"
             className="px-10 py-4 text-sm tracking-[0.25em] uppercase font-medium text-white border border-white/30 hover:border-[#c9a84c] hover:text-[#c9a84c] transition-all duration-300"
           >
             View Portfolio
-          </button>
+          </a>
         </motion.div>
 
         {/* Stats */}

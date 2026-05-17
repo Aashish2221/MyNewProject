@@ -140,14 +140,12 @@ export default function Services() {
 
               <div className="flex items-center justify-between pt-4 border-t border-white/10">
                 <span className="text-[#c9a84c] font-medium">{service.price}</span>
-                <button
-                  onClick={() =>
-                    document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })
-                  }
+                <a
+                  href="#contact"
                   className="text-xs tracking-widest uppercase text-white/60 hover:text-[#c9a84c] transition-colors"
                 >
                   Book →
-                </button>
+                </a>
               </div>
             </motion.div>
           ))}
