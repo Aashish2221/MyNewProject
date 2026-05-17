@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, "max-video-preview": -1, "max-image-preview": "large", "max-snippet": -1 },
   },
   verification: {
-    google: "your-google-verification-code",
+    google: "4e29c7721eacfc4d",
   },
   alternates: {
     canonical: "https://poonammakeupartist.vercel.app",
@@ -102,7 +102,7 @@ export default function RootLayout({
               description:
                 "Professional makeup artist in Maharashtra specializing in Marathi bridal, editorial and special occasion makeup. Serving Mumbai, Pune, Nashik, Nagpur, Thane, Aurangabad and all of Maharashtra.",
               url: "https://poonammakeupartist.vercel.app",
-              telephone: "+91-XXXXXXXXXX",
+              telephone: "+917767986666",
               priceRange: "$$",
               aggregateRating: {
                 "@type": "AggregateRating",
