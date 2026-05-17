@@ -221,7 +221,7 @@ export default function Contact() {
               </p>
 
               {[
-                { icon: Phone, label: "+91 98765 XXXXX", sub: "Mon – Sat, 10am – 7pm" },
+                { icon: Phone, label: "+91 77679 86666", sub: "Mon – Sat, 10am – 7pm" },
                 { icon: Mail, label: "hello@poonambeauty.com", sub: "Replies within 24 hours" },
                 { icon: MapPin, label: "Pune, Maharashtra", sub: "Serving all of Maharashtra" },
               ].map(({ icon: Icon, label, sub }) => (
@@ -270,6 +270,44 @@ export default function Contact() {
                 Dates fill up fast — especially during wedding season (Nov–Feb). I recommend
                 booking at least <strong>3–6 months in advance</strong> for bridal services.
               </p>
+            </div>
+
+            {/* Google Maps */}
+            <div className="overflow-hidden border border-gray-200" style={{ borderRadius: 2 }}>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d242118.24870039576!2d73.72785055!3d18.524824549999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bf2e67461101%3A0x828d43bf9d9ee343!2sPune%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1716000000000!5m2!1sen!2sin"
+                width="100%"
+                height="200"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Poonam Makeup Artist Location - Pune, Maharashtra"
+              />
+            </div>
+
+            {/* Platform badges */}
+            <div>
+              <p className="text-xs tracking-[0.25em] uppercase text-gray-400 mb-4">Find Me On</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { label: "WedMeGood", href: "https://www.wedmegood.com/vendors/pune/bridal-makeup/" },
+                  { label: "WeddingWire", href: "https://www.weddingwire.in/makeup-artists/pune" },
+                  { label: "BookEventz", href: "https://www.bookeventz.com/bridal-makeups/pune" },
+                  { label: "WeddingBazaar", href: "https://www.weddingbazaar.com/bridal-makeup-artists-in-pune" },
+                  { label: "Sulekha", href: "https://www.sulekha.com/professional-makeup-artists/pune" },
+                ].map(({ label, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 text-xs tracking-wider uppercase border border-gray-300 text-gray-500 hover:border-[#c9a84c] hover:text-[#c9a84c] transition-all duration-300"
+                  >
+                    {label}
+                  </a>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>

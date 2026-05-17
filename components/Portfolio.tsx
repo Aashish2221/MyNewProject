@@ -4,18 +4,21 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
-const categories = ["All", "Bridal", "Editorial", "Party", "Natural", "SFX"];
+const categories = ["All", "Marathi Bridal", "Bridal", "Airbrush", "Party", "Editorial", "Natural", "SFX"];
 
 const portfolioItems = [
-  { id: 1, category: "Bridal", title: "Rajasthani Bridal", desc: "Traditional lehenga bridal look", gradient: "from-rose-900 via-pink-800 to-red-700", emoji: "👰" },
-  { id: 2, category: "Editorial", title: "Vogue Editorial", desc: "High-fashion avant-garde", gradient: "from-purple-900 via-violet-800 to-indigo-700", emoji: "📸" },
-  { id: 3, category: "Party", title: "Sangeet Night", desc: "Vibrant festive glam", gradient: "from-orange-900 via-amber-700 to-yellow-600", emoji: "🎉" },
-  { id: 4, category: "Natural", title: "Dewy Skin", desc: "Glass skin no-makeup look", gradient: "from-green-900 via-emerald-700 to-teal-600", emoji: "🌿" },
-  { id: 5, category: "Bridal", title: "Modern Bride", desc: "Contemporary minimalist bridal", gradient: "from-slate-800 via-gray-700 to-zinc-600", emoji: "💍" },
-  { id: 6, category: "SFX", title: "Fantasy Character", desc: "Theatrical SFX transformation", gradient: "from-blue-900 via-cyan-800 to-teal-700", emoji: "🎭" },
-  { id: 7, category: "Editorial", title: "Bold Lip Campaign", desc: "Product launch editorial", gradient: "from-red-900 via-rose-800 to-pink-700", emoji: "💄" },
-  { id: 8, category: "Natural", title: "Fresh & Radiant", desc: "Pre-wedding session look", gradient: "from-yellow-800 via-amber-600 to-orange-500", emoji: "☀️" },
-  { id: 9, category: "Party", title: "New Year Glam", desc: "Smokey eye & glitter", gradient: "from-indigo-900 via-purple-800 to-violet-700", emoji: "✨" },
+  { id: 1, category: "Marathi Bridal", title: "Nauvari Saree Bridal", desc: "Traditional Marathi nauvari look with nath & green bangles", gradient: "from-rose-900 via-pink-800 to-red-700", emoji: "👰" },
+  { id: 2, category: "Marathi Bridal", title: "Ganesh Chaturthi Look", desc: "Festive Maharashtrian traditional makeup", gradient: "from-orange-900 via-amber-700 to-yellow-600", emoji: "🪷" },
+  { id: 3, category: "Bridal", title: "Modern Bride", desc: "Contemporary minimalist bridal glam", gradient: "from-slate-800 via-gray-700 to-zinc-600", emoji: "💍" },
+  { id: 4, category: "Airbrush", title: "Airbrush Bridal", desc: "Poreless 16-hour waterproof finish", gradient: "from-pink-900 via-rose-700 to-red-600", emoji: "✨" },
+  { id: 5, category: "Party", title: "Sangeet Night", desc: "Vibrant festive glam for sangeet", gradient: "from-purple-900 via-violet-800 to-indigo-700", emoji: "🎉" },
+  { id: 6, category: "Party", title: "New Year Glam", desc: "Smokey eye & glitter party look", gradient: "from-indigo-900 via-purple-800 to-violet-700", emoji: "🌟" },
+  { id: 7, category: "Editorial", title: "Vogue Editorial", desc: "High-fashion avant-garde shoot", gradient: "from-purple-900 via-violet-800 to-indigo-700", emoji: "📸" },
+  { id: 8, category: "Editorial", title: "Bold Lip Campaign", desc: "Product launch editorial makeup", gradient: "from-red-900 via-rose-800 to-pink-700", emoji: "💄" },
+  { id: 9, category: "Natural", title: "Dewy Glass Skin", desc: "No-makeup makeup glow look", gradient: "from-green-900 via-emerald-700 to-teal-600", emoji: "🌿" },
+  { id: 10, category: "Natural", title: "Pre-Wedding Glow", desc: "Fresh & radiant engagement session", gradient: "from-yellow-800 via-amber-600 to-orange-500", emoji: "☀️" },
+  { id: 11, category: "SFX", title: "Fantasy Character", desc: "Theatrical SFX transformation", gradient: "from-blue-900 via-cyan-800 to-teal-700", emoji: "🎭" },
+  { id: 12, category: "Airbrush", title: "HD Reception Look", desc: "Camera-perfect airbrush reception glam", gradient: "from-fuchsia-900 via-pink-800 to-rose-700", emoji: "💫" },
 ];
 
 export default function Portfolio() {
