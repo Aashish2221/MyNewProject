@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useForm } from "react-hook-form";
-import { Loader2, MapPin, Phone, Mail } from "lucide-react";
+import { Loader2, MapPin, Phone, Mail, MessageCircle } from "lucide-react";
 import { InstagramIcon, YoutubeIcon, FacebookIcon } from "./SocialIcons";
 import toast from "react-hot-toast";
 
@@ -221,22 +221,23 @@ export default function Contact() {
               </p>
 
               {[
-                { icon: Phone, label: "+91 77679 86666", sub: "Mon – Sat, 10am – 7pm" },
-                { icon: Mail, label: "hello@poonambeauty.com", sub: "Replies within 24 hours" },
-                { icon: MapPin, label: "Pune, Maharashtra", sub: "Serving all of Maharashtra" },
-              ].map(({ icon: Icon, label, sub }) => (
-                <div key={label} className="flex items-start gap-4">
+                { icon: Phone, label: "+91 77679 86666", sub: "Mon – Sat, 10am – 7pm", href: "tel:+917767986666" },
+                { icon: MessageCircle, label: "WhatsApp Us", sub: "Quick replies on WhatsApp", href: "https://wa.me/917767986666?text=Hi%20Poonam!%20I%27d%20like%20to%20book%20a%20makeup%20session." },
+                { icon: Mail, label: "hello@poonambeauty.com", sub: "Replies within 24 hours", href: "mailto:hello@poonambeauty.com" },
+                { icon: MapPin, label: "Pune, Maharashtra", sub: "Also serving Mumbai, Nashik & Nagpur", href: "#" },
+              ].map(({ icon: Icon, label, sub, href }) => (
+                <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="flex items-start gap-4 group">
                   <div
-                    className="w-10 h-10 flex items-center justify-center flex-shrink-0"
+                    className="w-10 h-10 flex items-center justify-center flex-shrink-0 group-hover:border-[#c9a84c] transition-colors"
                     style={{ background: "linear-gradient(135deg, #c9a84c20, #c9a84c10)", border: "1px solid #c9a84c40" }}
                   >
                     <Icon size={16} className="text-[#c9a84c]" />
                   </div>
                   <div>
-                    <p className="text-[#1a1a1a] font-medium text-sm">{label}</p>
+                    <p className="text-[#1a1a1a] font-medium text-sm group-hover:text-[#c9a84c] transition-colors">{label}</p>
                     <p className="text-gray-400 text-xs">{sub}</p>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
 

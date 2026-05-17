@@ -93,8 +93,8 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.7 }}
           className="text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed"
         >
-          Transforming faces, creating confidence. Specializing in Bridal, Editorial,
-          Airbrush & Special Effects Makeup across Maharashtra.
+          Pune & Mumbai&apos;s trusted makeup artist for Bridal, Marathi Wedding, Airbrush
+          & Editorial looks. Serving all of Maharashtra.
         </motion.p>
 
         {/* CTA Buttons */}

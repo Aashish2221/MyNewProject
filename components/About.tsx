@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { CheckCircle2 } from "lucide-react";
@@ -58,21 +59,16 @@ export default function About() {
               className="relative overflow-hidden"
               style={{ aspectRatio: "3/4", borderRadius: "2px" }}
             >
-              {/* Placeholder gradient (replace with actual photo) */}
-              <div
-                className="w-full h-full flex items-end justify-center"
-                style={{
-                  background:
-                    "linear-gradient(160deg, #2d1a2e 0%, #4a2040 30%, #6b3050 60%, #c4576b 100%)",
-                }}
-              >
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="text-6xl mb-4">💄</div>
-                  <p className="text-white/60 text-sm tracking-widest">Your Photo Here</p>
-                </div>
-                {/* Gold accent bar */}
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#c9a84c] to-transparent" />
-              </div>
+              <Image
+                src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&h=800&fit=crop&crop=face&q=85"
+                alt="Poonam - Professional Makeup Artist Pune Maharashtra"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+                priority
+              />
+              {/* Gold accent bar */}
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#c9a84c] to-transparent" />
             </div>
             {/* Experience badge */}
             <div

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Heart } from "lucide-react";
 import { InstagramIcon, YoutubeIcon, FacebookIcon } from "./SocialIcons";
 
@@ -100,8 +101,8 @@ export default function Footer() {
             Made with <Heart size={11} className="text-[#c4576b] fill-[#c4576b]" /> for beautiful stories
           </p>
           <div className="flex gap-4">
-            <button className="hover:text-[#c9a84c] transition-colors">Privacy Policy</button>
-            <button className="hover:text-[#c9a84c] transition-colors">Terms</button>
+            <Link href="/privacy" className="hover:text-[#c9a84c] transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-[#c9a84c] transition-colors">Terms</Link>
           </div>
         </div>
       </div>

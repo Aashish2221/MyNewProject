@@ -1,24 +1,61 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
 const categories = ["All", "Marathi Bridal", "Bridal", "Airbrush", "Party", "Editorial", "Natural", "SFX"];
 
 const portfolioItems = [
-  { id: 1, category: "Marathi Bridal", title: "Nauvari Saree Bridal", desc: "Traditional Marathi nauvari look with nath & green bangles", gradient: "from-rose-900 via-pink-800 to-red-700", emoji: "👰" },
-  { id: 2, category: "Marathi Bridal", title: "Ganesh Chaturthi Look", desc: "Festive Maharashtrian traditional makeup", gradient: "from-orange-900 via-amber-700 to-yellow-600", emoji: "🪷" },
-  { id: 3, category: "Bridal", title: "Modern Bride", desc: "Contemporary minimalist bridal glam", gradient: "from-slate-800 via-gray-700 to-zinc-600", emoji: "💍" },
-  { id: 4, category: "Airbrush", title: "Airbrush Bridal", desc: "Poreless 16-hour waterproof finish", gradient: "from-pink-900 via-rose-700 to-red-600", emoji: "✨" },
-  { id: 5, category: "Party", title: "Sangeet Night", desc: "Vibrant festive glam for sangeet", gradient: "from-purple-900 via-violet-800 to-indigo-700", emoji: "🎉" },
-  { id: 6, category: "Party", title: "New Year Glam", desc: "Smokey eye & glitter party look", gradient: "from-indigo-900 via-purple-800 to-violet-700", emoji: "🌟" },
-  { id: 7, category: "Editorial", title: "Vogue Editorial", desc: "High-fashion avant-garde shoot", gradient: "from-purple-900 via-violet-800 to-indigo-700", emoji: "📸" },
-  { id: 8, category: "Editorial", title: "Bold Lip Campaign", desc: "Product launch editorial makeup", gradient: "from-red-900 via-rose-800 to-pink-700", emoji: "💄" },
-  { id: 9, category: "Natural", title: "Dewy Glass Skin", desc: "No-makeup makeup glow look", gradient: "from-green-900 via-emerald-700 to-teal-600", emoji: "🌿" },
-  { id: 10, category: "Natural", title: "Pre-Wedding Glow", desc: "Fresh & radiant engagement session", gradient: "from-yellow-800 via-amber-600 to-orange-500", emoji: "☀️" },
-  { id: 11, category: "SFX", title: "Fantasy Character", desc: "Theatrical SFX transformation", gradient: "from-blue-900 via-cyan-800 to-teal-700", emoji: "🎭" },
-  { id: 12, category: "Airbrush", title: "HD Reception Look", desc: "Camera-perfect airbrush reception glam", gradient: "from-fuchsia-900 via-pink-800 to-rose-700", emoji: "💫" },
+  {
+    id: 1, category: "Marathi Bridal", title: "Nauvari Saree Bridal", desc: "Traditional Marathi nauvari look with nath & green bangles",
+    image: "https://images.unsplash.com/photo-1583001931096-959e9a1a6223?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 2, category: "Marathi Bridal", title: "Ganesh Chaturthi Look", desc: "Festive Maharashtrian traditional makeup",
+    image: "https://images.unsplash.com/photo-1610173827001-de5ae9f28d78?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 3, category: "Bridal", title: "Modern Bride", desc: "Contemporary minimalist bridal glam",
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 4, category: "Airbrush", title: "Airbrush Bridal", desc: "Poreless 16-hour waterproof finish",
+    image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 5, category: "Party", title: "Sangeet Night", desc: "Vibrant festive glam for sangeet",
+    image: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 6, category: "Party", title: "New Year Glam", desc: "Smokey eye & glitter party look",
+    image: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 7, category: "Editorial", title: "Vogue Editorial", desc: "High-fashion avant-garde shoot",
+    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 8, category: "Editorial", title: "Bold Lip Campaign", desc: "Product launch editorial makeup",
+    image: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 9, category: "Natural", title: "Dewy Glass Skin", desc: "No-makeup makeup glow look",
+    image: "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 10, category: "Natural", title: "Pre-Wedding Glow", desc: "Fresh & radiant engagement session",
+    image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 11, category: "SFX", title: "Fantasy Character", desc: "Theatrical SFX transformation",
+    image: "https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=600&h=800&fit=crop&crop=face&q=80",
+  },
+  {
+    id: 12, category: "Airbrush", title: "HD Reception Look", desc: "Camera-perfect airbrush reception glam",
+    image: "https://images.unsplash.com/photo-1560869713-7d0a29430803?w=600&h=800&fit=crop&crop=face&q=80",
+  },
 ];
 
 export default function Portfolio() {
@@ -91,15 +128,13 @@ export default function Portfolio() {
                 className="gallery-item group relative cursor-pointer overflow-hidden rounded-sm shadow-md"
                 style={{ aspectRatio: "3/4" }}
               >
-                {/* Gradient placeholder — replace with <Image /> */}
-                <div
-                  className={`w-full h-full bg-gradient-to-br ${item.gradient} flex flex-col items-center justify-center`}
-                >
-                  <span className="text-6xl mb-3 group-hover:scale-110 transition-transform duration-500">
-                    {item.emoji}
-                  </span>
-                  <p className="text-white/30 text-xs tracking-widest">Add your photo here</p>
-                </div>
+                <Image
+                  src={item.image}
+                  alt={`${item.title} - Poonam Makeup Artist Pune`}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
 
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col justify-end p-6">

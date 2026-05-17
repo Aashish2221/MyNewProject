@@ -158,7 +158,7 @@ export default function Services() {
           transition={{ delay: 0.8 }}
           className="text-center text-gray-500 text-sm mt-10"
         >
-          * Serving Pune, Mumbai, Thane, Navi Mumbai, Nashik, Nagpur, Aurangabad & all of Maharashtra. Travel charges may apply for locations outside Pune. All prices include professional makeup products, tools, and skin preparation.
+          * Based in Pune. Serving Mumbai, Thane, Navi Mumbai, Nashik, Nagpur, Aurangabad & all of Maharashtra. Travel charges: Mumbai ₹1,500 · Nashik/Nagpur ₹2,500 · Outstation rates on request. All prices include professional makeup products, tools, and skin preparation.
         </motion.p>
       </div>
     </section>
