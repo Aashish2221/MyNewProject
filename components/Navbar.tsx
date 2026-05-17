@@ -28,8 +28,13 @@ export default function Navbar() {
   const handleNavClick = (href: string) => {
     setActive(href);
     setMenuOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      const el = document.querySelector(href);
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY - 72;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }, 350);
   };
 
   return (

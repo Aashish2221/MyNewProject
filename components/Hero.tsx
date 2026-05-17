@@ -45,7 +45,7 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
         {/* Badge */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -56,7 +56,7 @@ export default function Hero() {
             Award-Winning Makeup Artist
           </span>
           <Star size={12} className="text-[#c9a84c] fill-[#c9a84c]" />
-        </motion.div>
+        </motion.div> */}
 
         {/* Name */}
         <motion.h1
