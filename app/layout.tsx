@@ -18,7 +18,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.poonambeauty.com"),
+  metadataBase: new URL("https://poonammakeupartist.vercel.app"),
   title: {
     default: "Poonam | Professional Makeup Artist | Bridal & Editorial Makeup in Maharashtra",
     template: "%s | Poonam Makeup Artist Maharashtra",
@@ -42,22 +42,22 @@ export const metadata: Metadata = {
     "luxury makeup artist Pune",
     "best makeup artist Maharashtra",
   ],
-  authors: [{ name: "Poonam", url: "https://www.poonambeauty.com" }],
+  authors: [{ name: "Poonam", url: "https://poonammakeupartist.vercel.app" }],
   creator: "Poonam",
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: "https://www.poonambeauty.com",
+    locale: "en_IN",
+    url: "https://poonammakeupartist.vercel.app",
     siteName: "Poonam Beauty",
     title: "Poonam | Professional Makeup Artist in Maharashtra",
     description:
       "Award-winning makeup artist in Maharashtra specializing in Marathi bridal, editorial & special occasions. Serving Mumbai, Pune, Nashik, Nagpur & more.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Poonam - Professional Makeup Artist",
+        alt: "Poonam - Professional Makeup Artist in Maharashtra",
       },
     ],
   },
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Poonam | Professional Makeup Artist in Maharashtra",
     description: "Award-winning makeup artist in Maharashtra. Book your Marathi bridal & editorial looks today.",
-    images: ["/og-image.jpg"],
+    images: ["/opengraph-image"],
     creator: "@poonambeauty",
   },
   robots: {
@@ -77,7 +77,7 @@ export const metadata: Metadata = {
     google: "your-google-verification-code",
   },
   alternates: {
-    canonical: "https://www.poonambeauty.com",
+    canonical: "https://poonammakeupartist.vercel.app",
   },
 };
 
@@ -87,21 +87,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${montserrat.variable}`}>
+    <html lang="en-IN" className={`${cormorant.variable} ${montserrat.variable}`}>
       <head>
-        <link rel="canonical" href="https://www.poonambeauty.com" />
+        <meta name="theme-color" content="#c9a84c" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
-              "@id": "https://www.poonambeauty.com",
+              "@id": "https://poonammakeupartist.vercel.app",
               name: "Poonam Beauty - Professional Makeup Artist Maharashtra",
-              image: "https://www.poonambeauty.com/og-image.jpg",
+              image: "https://poonammakeupartist.vercel.app/opengraph-image",
               description:
                 "Professional makeup artist in Maharashtra specializing in Marathi bridal, editorial and special occasion makeup. Serving Mumbai, Pune, Nashik, Nagpur, Thane, Aurangabad and all of Maharashtra.",
-              url: "https://www.poonambeauty.com",
+              url: "https://poonammakeupartist.vercel.app",
               telephone: "+91-XXXXXXXXXX",
               priceRange: "$$",
               aggregateRating: {
