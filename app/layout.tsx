@@ -95,6 +95,30 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
+              "@type": "WebSite",
+              "@id": "https://poonammakeupartist.vercel.app/#website",
+              name: "Poonam Beauty",
+              alternateName: "Poonam Makeup Artist",
+              url: "https://poonammakeupartist.vercel.app",
+              description: "Poonam Beauty — Professional Makeup Artist in Pune & Mumbai, Maharashtra",
+              publisher: {
+                "@type": "Person",
+                name: "Poonam Jadhav",
+                jobTitle: "Professional Makeup Artist",
+                url: "https://poonammakeupartist.vercel.app",
+                sameAs: [
+                  "https://www.instagram.com/makeupbypoonamjadhav",
+                  "https://youtube.com/@poonam-makeupartist-95",
+                ],
+              },
+            }),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
               "@type": "LocalBusiness",
               "@id": "https://poonammakeupartist.vercel.app",
               name: "Poonam Beauty - Professional Makeup Artist Maharashtra",
@@ -129,7 +153,6 @@ export default function RootLayout({
               ],
               sameAs: [
                 "https://www.instagram.com/makeupbypoonamjadhav",
-                "https://www.facebook.com/poonambeauty",
                 "https://youtube.com/@poonam-makeupartist-95",
               ],
             }),
