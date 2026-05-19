@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 
-const categories = ["All", "Marathi Bridal", "Bridal", "Airbrush", "Party", "Editorial", "Natural", "SFX"];
+const categories = ["All", "Marathi Bridal", "Bridal", "Airbrush", "Party", "Natural"];
 
 const portfolioItems = [
   {
@@ -33,24 +33,12 @@ const portfolioItems = [
     image: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=600&h=800&fit=crop&crop=face&q=80",
   },
   {
-    id: 7, category: "Editorial", title: "Vogue Editorial", desc: "High-fashion avant-garde shoot",
-    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=600&h=800&fit=crop&crop=face&q=80",
-  },
-  {
-    id: 8, category: "Editorial", title: "Bold Lip Campaign", desc: "Product launch editorial makeup",
-    image: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600&h=800&fit=crop&crop=face&q=80",
-  },
-  {
-    id: 9, category: "Natural", title: "Dewy Glass Skin", desc: "No-makeup makeup glow look",
+    id: 7, category: "Natural", title: "Dewy Glass Skin", desc: "No-makeup makeup glow look",
     image: "https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?w=600&h=800&fit=crop&crop=face&q=80",
   },
   {
     id: 10, category: "Natural", title: "Pre-Wedding Glow", desc: "Fresh & radiant engagement session",
     image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&h=800&fit=crop&crop=face&q=80",
-  },
-  {
-    id: 11, category: "SFX", title: "Fantasy Character", desc: "Theatrical SFX transformation",
-    image: "https://images.unsplash.com/photo-1596704017254-9b121068fb31?w=600&h=800&fit=crop&crop=face&q=80",
   },
   {
     id: 12, category: "Airbrush", title: "HD Reception Look", desc: "Camera-perfect airbrush reception glam",
@@ -165,12 +153,12 @@ export default function Portfolio() {
             See more of my work on Instagram
           </p>
           <a
-            href="https://www.instagram.com/poonambeauty"
+            href="https://www.instagram.com/makeupbypoonamjadhav"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-8 py-3 text-xs tracking-widest uppercase border border-[#c9a84c] text-[#c9a84c] hover:bg-[#c9a84c] hover:text-[#1a1a1a] transition-all duration-300"
           >
-            <span>@poonambeauty</span>
+            <span>@makeupbypoonamjadhav</span>
             <span>→</span>
           </a>
         </motion.div>

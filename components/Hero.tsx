@@ -34,7 +34,7 @@ export default function Hero() {
 
       {/* Decorative grid lines */}
       <div
-        className="absolute inset-0 opacity-5"
+        className="absolute inset-0 opacity-5 pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(rgba(201,168,76,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,76,0.5) 1px, transparent 1px)",
@@ -106,6 +106,7 @@ export default function Hero() {
         >
           <a
             href="#contact"
+            onClick={(e) => { e.preventDefault(); document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
             className="px-10 py-4 text-sm tracking-[0.25em] uppercase font-medium text-[#1a1a1a] transition-all duration-300 hover:shadow-lg hover:shadow-[#c9a84c]/30 hover:-translate-y-0.5"
             style={{ background: "linear-gradient(135deg, #c9a84c, #e8c97e, #a07830)" }}
           >
@@ -113,6 +114,7 @@ export default function Hero() {
           </a>
           <a
             href="#portfolio"
+            onClick={(e) => { e.preventDefault(); document.getElementById("portfolio")?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
             className="px-10 py-4 text-sm tracking-[0.25em] uppercase font-medium text-white border border-white/30 hover:border-[#c9a84c] hover:text-[#c9a84c] transition-all duration-300"
           >
             View Portfolio

@@ -66,7 +66,7 @@ export const metadata: Metadata = {
     title: "Poonam | Professional Makeup Artist in Maharashtra",
     description: "Award-winning makeup artist in Maharashtra. Book your Marathi bridal & editorial looks today.",
     images: ["/opengraph-image"],
-    creator: "@poonambeauty",
+    creator: "@makeupbypoonamjadhav",
   },
   robots: {
     index: true,
@@ -128,9 +128,9 @@ export default function RootLayout({
                 { "@type": "City", name: "Kolhapur" },
               ],
               sameAs: [
-                "https://www.instagram.com/poonambeauty",
+                "https://www.instagram.com/makeupbypoonamjadhav",
                 "https://www.facebook.com/poonambeauty",
-                "https://www.youtube.com/poonambeauty",
+                "https://youtube.com/@poonam-makeupartist-95",
               ],
             }),
           }}
@@ -174,29 +174,11 @@ export default function RootLayout({
                 {
                   "@type": "Service",
                   position: 4,
-                  name: "Editorial & Shoot Makeup",
-                  description: "Concept-driven makeup for fashion shoots, ad campaigns and lookbooks across Maharashtra.",
-                  provider: { "@type": "LocalBusiness", name: "Poonam Beauty" },
-                  areaServed: "Maharashtra",
-                  offers: { "@type": "Offer", price: "5000", priceCurrency: "INR", availability: "https://schema.org/InStock" },
-                },
-                {
-                  "@type": "Service",
-                  position: 5,
                   name: "Natural Glow Makeup",
                   description: "Less-is-more artistry that enhances your best features for day events and pre-engagement sessions.",
                   provider: { "@type": "LocalBusiness", name: "Poonam Beauty" },
                   areaServed: "Maharashtra",
                   offers: { "@type": "Offer", price: "2500", priceCurrency: "INR", availability: "https://schema.org/InStock" },
-                },
-                {
-                  "@type": "Service",
-                  position: 6,
-                  name: "Special Effects (SFX) Makeup",
-                  description: "Prosthetics, wounds, aging effects and character transformations for Bollywood productions and events.",
-                  provider: { "@type": "LocalBusiness", name: "Poonam Beauty" },
-                  areaServed: "Maharashtra",
-                  offers: { "@type": "Offer", price: "10000", priceCurrency: "INR", availability: "https://schema.org/InStock" },
                 },
               ],
             }),
@@ -215,7 +197,7 @@ export default function RootLayout({
                   name: "How much does bridal makeup cost in Pune?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "Poonam's bridal makeup starts at ₹8,000 in Pune and Maharashtra. This includes a trial session, day-of application, touch-up kit, and reception look. Airbrush bridal makeup starts at ₹10,000.",
+                    text: "Poonam's bridal makeup starts at ₹8,000 in Pune and Maharashtra. This includes a trial session, day-of application, touch-up kit, and reception look. Airbrush makeup starts at ₹6,000.",
                   },
                 },
                 {

@@ -10,9 +10,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const services = [
   "Bridal Makeup",
   "Party Makeup",
-  "Editorial Makeup",
   "Natural/Everyday Makeup",
-  "Special Effects Makeup",
   "Airbrush Makeup",
   "Other",
 ];

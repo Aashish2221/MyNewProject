@@ -12,18 +12,21 @@ const footerLinks = {
     { label: "Reviews", href: "#reviews" },
     { label: "Contact", href: "#contact" },
   ],
-  "Services": [
-    { label: "Bridal Makeup", href: "#services" },
-    { label: "Party Makeup", href: "#services" },
-    { label: "Editorial Makeup", href: "#services" },
-    { label: "Airbrush Makeup", href: "#services" },
-    { label: "Special Effects", href: "#services" },
+  "Cities": [
+    { label: "Makeup Artist Pune", href: "/pune" },
+    { label: "Makeup Artist Mumbai", href: "/mumbai" },
+    { label: "Bridal Makeup Pune", href: "/pune" },
+    { label: "Bridal Makeup Mumbai", href: "/mumbai" },
   ],
 };
 
 export default function Footer() {
   const handleNav = (href: string) => {
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    const el = document.querySelector(href);
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 72;
+      window.scrollTo({ top, behavior: "smooth" });
+    }
   };
 
   return (
@@ -53,8 +56,8 @@ export default function Footer() {
             </p>
             <div className="flex gap-3 mt-6">
               {[
-                { icon: InstagramIcon, href: "https://instagram.com/poonambeauty", label: "Instagram" },
-                { icon: YoutubeIcon, href: "https://youtube.com/poonambeauty", label: "YouTube" },
+                { icon: InstagramIcon, href: "https://www.instagram.com/makeupbypoonamjadhav", label: "Instagram" },
+                { icon: YoutubeIcon, href: "https://youtube.com/@poonam-makeupartist-95", label: "YouTube" },
                 { icon: FacebookIcon, href: "https://facebook.com/poonambeauty", label: "Facebook" },
               ].map(({ icon: Icon, href, label }) => (
                 <a
@@ -78,12 +81,15 @@ export default function Footer() {
               <ul className="space-y-2">
                 {links.map(({ label, href }) => (
                   <li key={label}>
-                    <button
-                      onClick={() => handleNav(href)}
-                      className="text-sm hover:text-[#c9a84c] transition-colors"
-                    >
-                      {label}
-                    </button>
+                    {href.startsWith("/") && !href.startsWith("/#") ? (
+                      <Link href={href} className="text-sm hover:text-[#c9a84c] transition-colors">
+                        {label}
+                      </Link>
+                    ) : (
+                      <button onClick={() => handleNav(href)} className="text-sm hover:text-[#c9a84c] transition-colors">
+                        {label}
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -96,7 +102,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-600">
-          <p>© {new Date().getFullYear()} Poonam Beauty. All rights reserved.</p>
+          <p suppressHydrationWarning>© {new Date().getFullYear()} Poonam Beauty. All rights reserved.</p>
           <p className="flex items-center gap-1">
             Made with <Heart size={11} className="text-[#c4576b] fill-[#c4576b]" /> for beautiful stories
           </p>

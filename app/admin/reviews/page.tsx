@@ -72,7 +72,10 @@ export default function AdminReviewsPage() {
       const url = `${API_URL}/api/reviews/${id}${action === "delete" ? "" : `/${action}`}`;
       const method = action === "delete" ? "DELETE" : "PATCH";
       await fetch(url, { method, headers });
-      setReviews((prev) => prev.filter((r) => r._id !== id));
+      // Feature keeps review in list (just marks it), others remove it from pending
+      if (action !== "feature") {
+        setReviews((prev) => prev.filter((r) => r._id !== id));
+      }
     } catch {
       setError("Action failed. Try again.");
     } finally {

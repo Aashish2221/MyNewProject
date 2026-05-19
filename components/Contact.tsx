@@ -13,10 +13,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 const services = [
   "Bridal Makeup",
   "Party Makeup",
-  "Editorial Makeup",
   "Natural/Everyday Makeup",
   "Airbrush Makeup",
-  "Special Effects Makeup",
 ];
 
 interface FormData {
@@ -246,8 +244,8 @@ export default function Contact() {
               <p className="text-xs tracking-[0.25em] uppercase text-gray-400 mb-4">Follow My Journey</p>
               <div className="flex gap-4">
                 {[
-                  { icon: InstagramIcon, label: "Instagram", href: "https://instagram.com/poonambeauty" },
-                  { icon: YoutubeIcon, label: "YouTube", href: "https://youtube.com/poonambeauty" },
+                  { icon: InstagramIcon, label: "Instagram", href: "https://www.instagram.com/makeupbypoonamjadhav" },
+                  { icon: YoutubeIcon, label: "YouTube", href: "https://youtube.com/@poonam-makeupartist-95" },
                   { icon: FacebookIcon, label: "Facebook", href: "https://facebook.com/poonambeauty" },
                 ].map(({ icon: Icon, label, href }) => (
                   <a

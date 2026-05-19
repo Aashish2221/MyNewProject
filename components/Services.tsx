@@ -25,16 +25,6 @@ const services = [
     popular: false,
   },
   {
-    emoji: "📸",
-    title: "Editorial & Shoot Makeup",
-    tagline: "Magazine-ready artistry",
-    description:
-      "Concept-driven makeup for fashion shoots, ad campaigns, and lookbooks. I work closely with photographers and art directors to realize bold creative visions.",
-    includes: ["Creative consultation", "On-set touch-ups", "Multiple looks", "Color test shots"],
-    price: "Starting ₹5,000",
-    popular: false,
-  },
-  {
     emoji: "✨",
     title: "Airbrush Makeup",
     tagline: "Flawless, featherlight finish",
@@ -52,16 +42,6 @@ const services = [
       "Less-is-more artistry that enhances your best features. Perfect for day events, pre-engagement sessions, and clients who prefer a no-makeup makeup look.",
     includes: ["Skin prep", "Luminous finish", "Minimal coverage", "Fresh look"],
     price: "Starting ₹2,500",
-    popular: false,
-  },
-  {
-    emoji: "🎭",
-    title: "Special Effects (SFX)",
-    tagline: "Theatrical & avant-garde",
-    description:
-      "From Bollywood productions to Halloween events — prosthetics, wounds, aging effects, and character transformations using industry-grade SFX materials.",
-    includes: ["Prosthetic application", "Body paint", "Character design", "On-set support"],
-    price: "Starting ₹10,000",
     popular: false,
   },
 ];
