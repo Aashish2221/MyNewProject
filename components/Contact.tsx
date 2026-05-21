@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useForm } from "react-hook-form";
 import { Loader2, MapPin, Phone, Mail, MessageCircle } from "lucide-react";
-import { InstagramIcon, YoutubeIcon, FacebookIcon } from "./SocialIcons";
+import { InstagramIcon, YoutubeIcon } from "./SocialIcons";
 import toast from "react-hot-toast";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -246,7 +246,6 @@ export default function Contact() {
                 {[
                   { icon: InstagramIcon, label: "Instagram", href: "https://www.instagram.com/makeupbypoonamjadhav" },
                   { icon: YoutubeIcon, label: "YouTube", href: "https://youtube.com/@poonam-makeupartist-95" },
-                  { icon: FacebookIcon, label: "Facebook", href: "https://facebook.com/poonambeauty" },
                 ].map(({ icon: Icon, label, href }) => (
                   <a
                     key={label}

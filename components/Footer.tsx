@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Heart } from "lucide-react";
-import { InstagramIcon, YoutubeIcon, FacebookIcon } from "./SocialIcons";
+import { InstagramIcon, YoutubeIcon } from "./SocialIcons";
 
 const footerLinks = {
   "Quick Links": [
@@ -58,7 +58,6 @@ export default function Footer() {
               {[
                 { icon: InstagramIcon, href: "https://www.instagram.com/makeupbypoonamjadhav", label: "Instagram" },
                 { icon: YoutubeIcon, href: "https://youtube.com/@poonam-makeupartist-95", label: "YouTube" },
-                { icon: FacebookIcon, href: "https://facebook.com/poonambeauty", label: "Facebook" },
               ].map(({ icon: Icon, href, label }) => (
                 <a
                   key={label}
